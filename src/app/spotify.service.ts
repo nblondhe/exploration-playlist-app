@@ -36,8 +36,8 @@ export class SpotifyService {
   }
 
   public getRecommendations(id, token) {
-    const uri = `recommendations?limit=5&market=US&seed_artists=${id}`;
-
+    const uri = `recommendations?limit=5&market=US&seed_tracks=${id}`;
+    return this.get(uri, token);
   }
 
 

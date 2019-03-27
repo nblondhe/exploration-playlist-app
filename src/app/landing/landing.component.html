@@ -1,20 +1,44 @@
-  <div class="content-wrapper">
-    <div class="speak-wrapper">
-      <!-- <section>
-                      @foreach (var item in Model.SavedTrackObjectResult.Items)
-                      {
-                          <div>
-                              <img src="@item.Track.Album.images[2].url">
-                          </div>
-                      }
-                  </section> -->
-                  <!-- <div class="message">
-                    For keeping up with thee ole' likes.
-                  </div>
-                  <a class="button med-button stroked">
-                    <span class="button-text">
-                      About the LikeFilter
-                    </span>
-                  </a> -->
+<div class="container">
+  <div class="lside">
+    <div class="space"></div>
+    <div class="actions">
+    <div class="wrapper">
+      <div class="logo">
+        <h1 class="brand">LikeFilter</h1>
+      </div>
+      <a class="button button-med" (click)="signIn();">Sign in with Spotify</a>
+      <a class="button button-med stroked" href="https://www.spotify.com/us/">Get Spotify</a>
     </div>
   </div>
+  <div class="links">
+    <a class="link" href="#">About</a>
+    <div class="vr"></div>
+    <a class="link" href="https://github.com/nblondhe/LikeBuilder">Github</a>
+  </div>
+  <footer>
+    Copyright &copy; 2019 LikeFilter
+  </footer>
+</div>
+  <div class="rside">
+    <div class="content-wrapper">
+      <div class="speak-wrapper">
+        <!-- <section>
+          @foreach (var item in Model.SavedTrackObjectResult.Items)
+          {
+            <div>
+              <img src="@item.Track.Album.images[2].url">
+            </div>
+          }
+        </section> -->
+        <!-- <div class="message">
+          For keeping up with thee ole' likes.
+        </div>
+        <a class="button med-button stroked">
+          <span class="button-text">
+            About the LikeFilter
+          </span>
+        </a> -->
+      </div>
+    </div>
+  </div>
+</div>
