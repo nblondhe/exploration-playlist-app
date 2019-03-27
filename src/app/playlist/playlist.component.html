@@ -1,0 +1,55 @@
+  <div class="top">
+    <div class="links">
+      <a class="link">About</a>
+      <div class="vr"></div>
+      <a class="link" href="https://github.com/nblondhe/LikeBuilder">Github</a>
+    </div>
+    <div class="user">
+      <img alt="Spotify logo" class="spotify-logo" src="../assets/images/Spotify_Icon_RGB_White.png" />
+      <span class="username">
+        <a class="link">
+          {{ spotifyUser }}
+        </a>
+      </span>
+    </div>
+  </div>
+  <div *ngIf="savedTracks" class="content-wrapper start">
+    <div class="track-row track-header">
+      <span>Current Playlist (Saved Tracks)</span>
+    </div>
+    <div *ngFor="let track of savedTracks; index as i" class="tracks-list">
+      <div class="track-row collapsible-parent">
+        <img class="small-cover clickable" src="{{ track.coverLow }}">
+        <div>
+          <div class="track clickable track-spacing">{{ track.track }}</div>
+          <div class="artist clickable track-spacing">
+            <span *ngFor="let artist of track.artists; index as j">
+              {{ artist['name'] }}
+              <span *ngIf="track.artists.length > 1 && j !== track.artists.length - 1">,&nbsp;</span>
+            </span>
+          </div>
+        </div>
+        
+        <div class="track-actions">
+          <img alt="remove" class="remove clickable" src="../assets/images/remove_icon.svg">
+            <img alt="expand" class="expand clickable" (click)="updateDetail(i)" src="../assets/images/expand_more.svg">
+        </div>
+      </div>
+    </div>
+    <!-- sub track recommendation -->
+      <div class="track-row collapsed">
+        <img class="small-cover clickable" src="../assets/images/bibio.jpg">
+        <div>
+          <div class="track clickable track-spacing">Track name</div>
+          <div class="artist clickable track-spacing">
+            Artist
+            <span>,&nbsp;</span>
+            Artist2
+          </div>
+        </div>
+        <div class="track-actions">
+          <img alt="remove" class="remove clickable" src="../assets/images/remove_icon.svg">
+          <img alt="expand" class="expand clickable sub-track" src="../assets/images/expand_more.svg">
+        </div>
+      </div>
+  </div>

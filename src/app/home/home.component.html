@@ -1,0 +1,8 @@
+<div class="container">
+    <router-outlet></router-outlet>
+    <app-login *ngIf="!logged_in" class="lside"></app-login>
+    <app-landing *ngIf="!logged_in" class="rside"></app-landing>
+
+    <app-detail *ngIf="logged_in" class="lside"></app-detail>
+    <app-playlist *ngIf="logged_in" class="rside border"></app-playlist>
+</div>
