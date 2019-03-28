@@ -1,5 +1,4 @@
 <div class="container">
-
   <div class="lside">
     <div class="space signedin"></div>
   <div class="actions signedin">
@@ -27,7 +26,7 @@
 <div class="rside border">
   <div class="top">
     <div class="links">
-      <a class="link">About</a>
+      <a class="link" href="#">About</a>
       <div class="vr"></div>
       <a class="link" href="https://github.com/nblondhe/LikeBuilder">Github</a>
     </div>
@@ -49,7 +48,7 @@
       <span>Saved Tracks</span>
     </div>
     <div *ngFor="let track of savedTracks; index as i" class="tracks-list">
-      <div class="track-row collapsible-parent" (click)="updateCurrentTrack(i)">
+      <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = savedTracks[i]">
         <img class="small-cover clickable" src="{{ track.coverLow }}" />
         <div>
           <div class="track clickable track-spacing">{{ track.track }}</div>
@@ -64,28 +63,34 @@
         </div>
         <div class="track-actions">
           <img alt="remove" class="remove clickable" src="../assets/images/remove_icon.svg" />
-          <img alt="expand" (click)="toggleRecommendation($event, i)" class="expand clickable" src="../assets/images/expand_more.svg" />
+          <img alt="expand" (click)="toggleRecommendation($event, i)" class="expand clickable"
+            src="../assets/images/expand_more.svg" />
         </div>
         </div>
         <!-- sub track recommendation -->
-        <div *ngIf="savedTracks[0].recs" #recommended class="track-row collapsed">
-          <img class="small-cover clickable" src="{{savedTracks[0].recs[0].coverLow}}" />
-          <div>
-            <div class="track clickable track-spacing"> {{ savedTracks[0].recs[0].track }}</div>
-            <div class="artist clickable track-spacing">
-                <span *ngFor="let artist of savedTracks[0].recs[0].artists; index as k">
-                    {{ artist.name }}
-                    <span *ngIf="
-                    savedTracks[0].recs[0].artists.length > 1 && k !== savedTracks[0].recs[0].artists.length - 1
-                      ">,&nbsp;</span>
-                  </span>
+
+          <div *ngFor="let rec of recStore[track.id]; index as k;"
+               [ngClass]="{'first-collapsed': k == 0}"
+               #recommended class="track-row collapsed">
+            <img class="small-cover clickable" src="{{ rec.coverLow }}" />
+            <div>
+              <div class="track clickable track-spacing"> {{ rec.track }}</div>
+              <div class="artist clickable track-spacing">
+                <span *ngFor="let artist of rec.artists; index as k">
+                  {{ artist.name }}
+                  <span *ngIf="
+                          rec.artists.length > 1 && k !== rec.artists.length - 1
+                          ">,&nbsp;</span>
+                </span>
+              </div>
+            </div>
+            <div class="track-actions">
+              <img alt="remove" class="remove clickable" src="../assets/images/remove_icon.svg" />
+              <img alt="expand" class="expand clickable sub-track" src="../assets/images/expand_more.svg" />
             </div>
           </div>
-          <div class="track-actions">
-            <img alt="remove" class="remove clickable" src="../assets/images/remove_icon.svg" />
-            <img alt="expand" class="expand clickable sub-track" src="../assets/images/expand_more.svg" />
-          </div>
-        </div>
+
+
         </div>
     </div>
   </div>
