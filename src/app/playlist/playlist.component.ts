@@ -1,6 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SpotifyService } from '../spotify.service';
-import { anchorDef } from '@angular/core/src/view';
+import { JsonService } from '../json.service';
+// import recData from '../../assets/recommendationResults.json';
+// import savedData from './savedTracksResults.json';
+// import recData from './recommendationResults.json';
+
+// const savedTrackResults = (savedData).items;
+// const recResults = (recData).tracks;
 
 @Component({
   selector: 'app-playlist',
@@ -18,7 +24,8 @@ export class PlaylistComponent implements OnInit {
   recStore = {};
   currentTrack = {};
 
-  constructor(private spotifyService: SpotifyService) { }
+  constructor(private spotifyService: SpotifyService,
+    private jsonService: JsonService) { }
 
   ngOnInit() {
     this.token = localStorage.getItem('spotifyToken');
@@ -30,8 +37,7 @@ export class PlaylistComponent implements OnInit {
   }
 
   getSavedTracks() {
-    this.spotifyService.getSavedTracks(this.token).subscribe(data => {
-      // console.log(data['items']);
+    this.jsonService.getSavedTracks().subscribe(data => {
       this.savedTracks = data['items'].map(track => (
         {
           artists: track['track']['artists'],
@@ -43,19 +49,51 @@ export class PlaylistComponent implements OnInit {
         }
       ));
       this.currentTrack = this.savedTracks[0];
-    },
-    error => {
-      if (error) {
-        this.error = error;
-      }
-    },
-    () => {
-      this.savedTracks.forEach(element => {
-        this.getRecommendations(element.id);
+      this.jsonService.getRecs().subscribe(recs => {
+
+        this.savedTracks.forEach(element => {
+          this.recStore[element.id] = recs['tracks'].map(track => (
+            {
+              artists: track['artists'],
+              track: track['name'],
+              album: track['album']['name'],
+              coverLow: track['album']['images'][2]['url'],
+              coverHigh: track['album']['images'][0]['url'],
+              seedId: element.id,
+              // id: track['id']
+            }
+          ));
+        });
+
       });
-      // console.log(this.recStore);
-    }
-    );
+
+    });
+    // this.spotifyService.getSavedTracks(this.token).subscribe(data => {
+    //   // console.log(data['items']);
+    //   this.savedTracks = data['items'].map(track => (
+    //     {
+    //       artists: track['track']['artists'],
+    //       track: track['track']['name'],
+    //       album: track['track']['album']['name'],
+    //       coverLow: track['track']['album']['images'][2]['url'],
+    //       coverHigh: track['track']['album']['images'][0]['url'],
+    //       id: track['track']['id']
+    //     }
+    //   ));
+    //   this.currentTrack = this.savedTracks[0];
+    // },
+    // error => {
+    //   if (error) {
+    //     this.error = error;
+    //   }
+    // },
+    // () => {
+    //   this.savedTracks.forEach(element => {
+    //     this.getRecommendations(element.id);
+    //   });
+    //   // console.log(this.recStore);
+    // }
+    // );
   }
   getRecommendations(id) {
     this.spotifyService.getRecommendations(id, this.token).subscribe(data => {
@@ -110,8 +148,10 @@ export class PlaylistComponent implements OnInit {
       // Ease drop down
       if (panel.style.maxHeight){
         panel.style.maxHeight = null;
+        panel.style.webkitTransition = 'max-height 1s ease-in-out';
       } else {
-        panel.style.maxHeight = panel.scrollHeight + 'px';
+        panel.style.maxHeight = panel.scrollHeight + '8' + 'px';
+        panel.style.webkitTransition = 'max-height 1s ease-in-out';
       } 
       anchor = panel;
     }
