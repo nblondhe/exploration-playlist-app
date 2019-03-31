@@ -16,7 +16,6 @@ import { JsonService } from '../json.service';
 export class PlaylistComponent implements OnInit {
   private token;
   error;
-  @ViewChild('recommended') recommended;
   @ViewChild('collapseAnchor') collapseAnchor;
   spotifyUser: string;
   savedTracks = [];
@@ -37,6 +36,7 @@ export class PlaylistComponent implements OnInit {
   }
 
   getSavedTracks() {
+    // Temp JSON data
     this.jsonService.getSavedTracks().subscribe(data => {
       this.savedTracks = data['items'].map(track => (
         {
@@ -66,7 +66,6 @@ export class PlaylistComponent implements OnInit {
         });
 
       });
-
     });
     // this.spotifyService.getSavedTracks(this.token).subscribe(data => {
     //   // console.log(data['items']);
@@ -114,7 +113,7 @@ export class PlaylistComponent implements OnInit {
   }
 
   toggleRecommendation(event) {
-    let anchor = event.target.parentNode.parentNode;
+    const anchor = event.target.parentNode.parentNode;
     const tracksList = anchor.parentNode;
     const allSavedChildren = anchor.parentNode.parentNode.children;
 
@@ -124,9 +123,24 @@ export class PlaylistComponent implements OnInit {
       anchor.classList.add('highlighted');
     }
 
-    for (let j = 0; j < allSavedChildren.length; j++) {
-      const current = allSavedChildren[j];
+    const panel = anchor.nextElementSibling;
+    // Display
+    if (panel.style.display === 'flex') {
+      panel.style.display = 'none';
+    } else {
+      panel.style.display = 'flex';
+    }
+    // Ease drop down
+    if (panel.style.maxHeight){
+      panel.style.maxHeight = null;
+      panel.style.webkitTransition = 'max-height 1s ease-in-out';
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + '8' + 'px';
+      panel.style.webkitTransition = 'max-height 1s ease-in-out';
+    }
 
+    for (let i = 0; i < allSavedChildren.length; i++) {
+      const current = allSavedChildren[i];
       // Mute not selected
       if (current !== tracksList) {
         if (current.classList.contains('mute')) {
@@ -135,25 +149,6 @@ export class PlaylistComponent implements OnInit {
            current.classList.add('mute');
         }
       }
-    }
-    for (let j = 0; j < 5; j++) {
-      const panel = anchor.nextElementSibling;
-      // Display
-      if (panel.style.display === 'flex') {
-        panel.style.display = 'none';
-      } else {
-        panel.style.display = 'flex';
-      }
-
-      // Ease drop down
-      if (panel.style.maxHeight){
-        panel.style.maxHeight = null;
-        panel.style.webkitTransition = 'max-height 1s ease-in-out';
-      } else {
-        panel.style.maxHeight = panel.scrollHeight + '8' + 'px';
-        panel.style.webkitTransition = 'max-height 1s ease-in-out';
-      } 
-      anchor = panel;
     }
   }
 }

@@ -1,7 +1,7 @@
 <div class="container">
   <div class="lside">
-    <div class="space signedin"></div>
-    <div class="actions signedin">
+    <div class="top-spacing"></div>
+    <div class="actions">
       <div class="wrapper">
         <img class="album-cover" src="{{ currentTrack.coverHigh }}" />
         <div class="current-track">
@@ -39,40 +39,22 @@
     </footer>
   </div>
 
-  <div class="rside border">
-    <!-- <div class="top">
-      <div class="links">
-        <a class="link" href="#">About</a>
-        <div class="vr"></div>
-        <a class="link" href="https://github.com/nblondhe/LikeBuilder">Github</a>
-      </div>
-      <div class="user">
-        <img alt="Spotify logo" class="spotify-logo" src="../assets/images/Spotify_Icon_RGB_White.png" />
-        <span class="username">
-          <a class="link">
-            {{ spotifyUser }}
-          </a>
-        </span>
-      </div>
-    </div> -->
-    <div *ngIf="savedTracks" class="content-wrapper start">
-      <div class="track-row track-header">
-        <!-- <span class="tab">
-          Saved Tracks
-       </span> -->
+  <div class="rside">
+    <div *ngIf="savedTracks" class="content-wrapper">
+      <div class="track-row action-header">
+          <span class="current-tab col-head">
+              Saved Tracks
+           </span>
         <div class="header-actions">
           <a class="button button-med stroked">Clear Playlist</a>
           <a class="button button-med">Create Playlist</a>
         </div>
       </div>
       <div class="saved-sub-header">
-          <span class="current-tab col-head">
-              Saved Tracks
-           </span>
            <span class="flex-space"></span>
-          <span class="col-head rec">
+          <!-- <span class="col-head rec">
             Similar Tracks
-          </span>
+          </span> -->
       </div>
       <div *ngFor="let track of savedTracks; index as i" class="tracks-list">
         <div 
@@ -93,28 +75,32 @@
               </div>
             </div>
             <div class="track-actions">
-              <img alt="expand" (click)="toggleRecommendation($event, i)" class="expand clickable" src="../assets/images/expand_more.svg" />
-              <!-- <img alt="expand" (click)="toggleRecommendation($event, i)" class="expand clickable" src="../assets/images/expand_more_tert.svg" />             -->
+              <!-- <span class="similar">
+                Similar Tracks
+              </span> -->
+              <a class="button similar raised-white" (click)="toggleRecommendation($event, i)">
+                Similar Tracks
+              </a>
+              <img alt="expand" class="expand clickable" src="../assets/images/expand_more_secondary.svg" />
             </div>
         </div>
 
 
-        <div class="recommended-list collapsed">
-            <div class="rec-sub-header top-inset-collapsed">
+        <div class="collapsed ">
+            <div class="rec-sub-header collapsed-top-inset">
               <img alt="add" class="add clickable" src="../assets/images/add_icon.svg" />
                 <span class="col-head text-color">
                   Add all
                 </span>
                 <span class="flex-space"></span>
-                <span class="col-head">
+                <!-- <span class="col-head">
                   Similar Tracks
-                </span>
+                </span> -->
             </div>
             <div 
               *ngFor="let rec of recStore[track.id]; index as k;" 
-              #recommended
-              [ngClass]="{'bottom-inset-collapsed': k == 4}"
-              class="track-row rec-track">
+              [ngClass]="{'collapsed-bottom-inset': k == 4}"
+              class="track-row rec-row">
               <img alt="add" class="add clickable" src="../assets/images/add_icon.svg" />
               <img class="small-cover clickable" src="{{ rec.coverLow }}" />
               <div>
@@ -130,7 +116,6 @@
               </div>
               <div class="track-actions">
                 <img alt="remove" class="remove clickable" src="../assets/images/remove_icon.svg" />
-                <!-- <img alt="expand" class="expand clickable sub-track" src="../assets/images/expand_more.svg" /> -->
               </div>
             </div>
           </div>
