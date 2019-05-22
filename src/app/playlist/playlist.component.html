@@ -46,7 +46,7 @@
               Saved Tracks
            </span>
         <div class="header-actions">
-          <a class="button button-med stroked">Clear Playlist</a>
+          <a class="button button-med raised-white">Clear Playlist</a>
           <a class="button button-med">Create Playlist</a>
         </div>
       </div>
@@ -61,9 +61,9 @@
           #collapseAnchor 
           class="track-row collapsible-parent" 
           (click)="currentTrack = savedTracks[i]">
-            <img alt="add" class="add clickable" src="../assets/images/add_icon.svg" />
+            <img alt="add" class="add clickable" src="../assets/images/track_add.svg" />
             <img class="small-cover clickable" src="{{ track.coverLow }}" />
-            <div>
+            <div class="track-info">
               <div class="track clickable track-spacing">{{ track.track }}</div>
               <div class="artist clickable track-spacing">
                 <span *ngFor="let artist of track.artists; index as j">
@@ -78,17 +78,19 @@
               <!-- <span class="similar">
                 Similar Tracks
               </span> -->
-              <a class="button similar raised-white" (click)="toggleRecommendation($event, i)">
+              <a class="button similar raised-white" style="padding-right: 48px;" (click)="toggleRecommendation($event, i)">
                 Similar Tracks
               </a>
-              <img alt="expand" class="expand clickable" src="../assets/images/expand_more_secondary.svg" />
+              <img alt="expand" (click)="toggleRecommendation($event, i)" class="expand lg-screen clickable" src="../assets/images/expand_more_secondary.svg" />
+              <!-- show on mobile, hide button -->
+              <img alt="expand" (click)="toggleRecommendation($event, i)" class="sm-screen clickable" src="../assets/images/expand_more.svg" />              
             </div>
         </div>
 
 
         <div class="collapsed ">
             <div class="rec-sub-header collapsed-top-inset">
-              <img alt="add" class="add clickable" src="../assets/images/add_icon.svg" />
+              <img alt="add" class="add clickable" src="../assets/images/playlist_add.svg" />
                 <span class="col-head text-color">
                   Add all
                 </span>
@@ -101,7 +103,7 @@
               *ngFor="let rec of recStore[track.id]; index as k;" 
               [ngClass]="{'collapsed-bottom-inset': k == 4}"
               class="track-row rec-row">
-              <img alt="add" class="add clickable" src="../assets/images/add_icon.svg" />
+              <img alt="add" class="add clickable" src="../assets/images/track_add.svg" />
               <img class="small-cover clickable" src="{{ rec.coverLow }}" />
               <div>
                 <div class="track clickable track-spacing"> {{ rec.track }}</div>

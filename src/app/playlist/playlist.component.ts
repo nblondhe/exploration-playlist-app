@@ -120,6 +120,7 @@ export class PlaylistComponent implements OnInit {
     if (anchor.classList.contains('highlighted')) {
       anchor.classList.remove('highlighted');
     } else {
+      console.log('anchor', anchor);
       anchor.classList.add('highlighted');
     }
 

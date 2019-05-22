@@ -113,7 +113,7 @@ a, a:visited, a:hover {
 .raised-white {
     background: var(--text);
     color: var(--secondary);
-    padding-right: 48px;
+    /* padding-right: 48px; */
     transition: unset;
 }
 
@@ -155,7 +155,7 @@ a, a:visited, a:hover {
 }
 
 .space {
-    flex: 4;
+    flex: 1;
     min-height: 48px;
 }
 
@@ -184,7 +184,7 @@ a, a:visited, a:hover {
 
 .brand {
     font-weight: 800;
-    font-size: 60px;
+    font-size: 90px;
     margin: 0 0 64px 0;
 }
 
@@ -228,6 +228,7 @@ footer {
     flex: 6;
     display: flex;
     flex-direction: column;
+    min-width: 572px;
 }
 
 .speak-wrapper {
@@ -252,7 +253,7 @@ footer {
 
 }
 
-@media only screen and (max-width : 912px) {
+@media only screen and (max-width : 932px) {
     .lside {
         position: unset;
     }
@@ -270,6 +271,16 @@ footer {
 
     .tracks-list {
         width: 100%;
+    }
+    
+    /*  show expand icon, hide button */
+
+    .rside {
+        min-width: unset;
+    }
+
+    .content-wrapper {
+        width: unset !important;
     }
 
 }
