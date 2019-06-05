@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { SpotifyService } from '../spotify.service';
 import { JsonService } from '../json.service';
 // import recData from '../../assets/recommendationResults.json';
@@ -19,9 +19,11 @@ export class PlaylistComponent implements OnInit {
   @ViewChild('collapseAnchor') collapseAnchor;
   spotifyUser: string;
   savedTracks = [];
+  currentPlaylist = [];
   recommendations = [];
   recStore = {};
   currentTrack = {};
+  tab = 'savedTracks';
 
   constructor(private spotifyService: SpotifyService,
     private jsonService: JsonService) { }
@@ -35,6 +37,21 @@ export class PlaylistComponent implements OnInit {
     this.getSavedTracks();
   }
 
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll(e) {
+     if (window.pageYOffset > 0) {
+       const element = document.getElementById('tabHeader');
+       element.style.background = '#454d60';
+       const border = document.getElementById('border');
+      border.style.boxShadow = '-13px 12px 24px -20px #000';
+     } else {
+      const element = document.getElementById('tabHeader');
+      const border = document.getElementById('border');
+      element.style.background = 'unset';
+      border.style.boxShadow = 'unset';
+     }
+  }
+
   getSavedTracks() {
     // Temp JSON data
     this.jsonService.getSavedTracks().subscribe(data => {
@@ -45,7 +62,10 @@ export class PlaylistComponent implements OnInit {
           album: track['track']['album']['name'],
           coverLow: track['track']['album']['images'][2]['url'],
           coverHigh: track['track']['album']['images'][0]['url'],
-          id: track['track']['id']
+          id: track['track']['id'],
+          release: new Date(track['track']['album']['release_date']),
+          added: new Date(track['added_at']),
+          album_id: track['track']['album']['id'],
         }
       ));
       this.currentTrack = this.savedTracks[0];
@@ -59,12 +79,13 @@ export class PlaylistComponent implements OnInit {
               album: track['album']['name'],
               coverLow: track['album']['images'][2]['url'],
               coverHigh: track['album']['images'][0]['url'],
+              release: new Date(track['album']['release_date']),
               seedId: element.id,
               // id: track['id']
             }
           ));
         });
-
+        console.log(this.recStore);
       });
     });
     // this.spotifyService.getSavedTracks(this.token).subscribe(data => {
@@ -120,7 +141,6 @@ export class PlaylistComponent implements OnInit {
     if (anchor.classList.contains('highlighted')) {
       anchor.classList.remove('highlighted');
     } else {
-      console.log('anchor', anchor);
       anchor.classList.add('highlighted');
     }
 
@@ -151,5 +171,11 @@ export class PlaylistComponent implements OnInit {
         }
       }
     }
+  }
+
+  addAllRecommendations(trackId) {
+    this.recStore[trackId].forEach(element => {
+      this.currentPlaylist.push(element);
+    });
   }
 }
