@@ -26,7 +26,7 @@ export class SpotifyService {
     return this.get(uri, token);
   }
 
-  public getArtistId(artist, token) {
+  public getArtistId(artist) {
     const uri = `search?q=${artist}&type=artist&limit=1`;
   }
 
@@ -40,6 +40,26 @@ export class SpotifyService {
     return this.get(uri, token);
   }
 
+  // Add arg to name playlist dynamically
+  public createPlaylist(id, token) {
+      const postData = {
+        name: 'Exploration Builder',
+        description: 'Curated by you. From Saved tracks and Spotify recommendations.',
+        public: false
+      };
+      const uri = `users/${id}/playlists`;
+      return this.post(uri, token, postData);
+  }
+
+  // OLD API????
+  public buildPlaylist(id, playlistId, token, segment) {
+    const postData = {
+      uris: segment
+    };
+    const uri = `users/${id}/playlists/${playlistId}/tracks?`;
+    console.log('build playlist url: ' + uri);
+    return this.post(uri, token, postData);
+  }
 
   private get(endpoint: string, token: string) {
     return this.httpClient

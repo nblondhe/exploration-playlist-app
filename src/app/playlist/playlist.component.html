@@ -26,9 +26,9 @@
               <td class="attr">Genre</td>
               <td class="val">Ambient, Experimental</td>
             </tr> -->
-            <tr *ngIf="currentTrack.added">
+            <tr *ngIf="currentTrack.addedOn">
               <td class="attr">Added on</td>
-              <td class="val">{{currentTrack.added | date : 'MMMM, yyyy'}}</td>
+              <td class="val">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</td>
             </tr>
           </table>
         </div>
@@ -40,11 +40,12 @@
       </div>
     </div>
     <div class="wrapper playlist-actions">
-      <a class="button button-med raised-white" (click)="currentPlaylist = [];">Clear Playlist</a>
+      <a class="button button-med raised-white" (click)="clearPlaylist();">Clear Playlist</a>
        <a class="button button-med" (click)="createPlaylist();">Create Playlist</a>
+       <div class="notif">Show me toast</div>
     </div>
     <footer>
-      <h1 class="brand-med footer">Discovery</h1>
+      <h1 class="brand-med footer">Exploration</h1>
       <div class="user">
         <span>
           Signed in as
@@ -92,7 +93,8 @@
         <div class="content-container" *ngSwitchCase="'savedTracks'">
           <div *ngFor="let track of savedTracks; index as i" class="tracks-list">
             <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = savedTracks[i]">
-              <img alt="add" class="add clickable" src="../assets/images/track_add.svg"  (click)="currentPlaylist.push(track)"/>
+              <img *ngIf="!track.added" alt="add" class="add clickable" src="../assets/images/add_circle.svg"  (click)="addTrack(track,'saved', i)"/>
+              <img *ngIf="track.added" alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg" (click)="removeTrack(track, i)"/>
               <img class="small-cover clickable" src="{{ track.coverLow }}" />
               <div class="track-info">
                 <div class="track clickable track-spacing">{{ track.track }}</div>
@@ -118,18 +120,11 @@
             </div>
         
             <div class="collapsed ">
-              <div class="rec-sub-header collapsed-top-inset">
-                <span class="flex-space"></span>
-                <div class="clickable add-all" (click)="addAllRecommendations(track.id)">
-                  <img alt="add" class="add clickable" src="../assets/images/playlist_add.svg" />
-                  <span class="col-head text-color">
-                    Add all
-                  </span>
-                </div>
-              </div>
-              <div *ngFor="let rec of recStore[track.id]; index as k;" [ngClass]="{'collapsed-bottom-inset': k == 4}"
+              <div *ngFor="let rec of recStore[track.id]; index as k;" [ngClass]="{'collapsed-bottom-inset': k == 4, 'collapsed-top-inset': k == 0}"
                 class="track-row rec-row" (click)="currentTrack = recStore[track.id][k]">
-                <img alt="add" class="add clickable" src="../assets/images/track_add.svg" (click)="currentPlaylist.push(rec)"/>
+                <img *ngIf="!rec.added" alt="add" class="add clickable" src="../assets/images/add_circle.svg"  (click)="addTrack(rec, 'recommended', track.id, k)"/>
+                <img *ngIf="rec.added" alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg" (click)="removeTrack(rec, k)"/>
+               
                 <img class="small-cover clickable" src="{{ rec.coverLow }}" />
                 <div>
                   <div class="track clickable track-spacing"> {{ rec.track }}</div>
@@ -141,7 +136,6 @@
                   </div>
                 </div>
                 <div class="track-actions">
-                  <img alt="remove" class="remove clickable" src="../assets/images/remove_icon.svg" />
                 </div>
               </div>
             </div>
@@ -153,8 +147,9 @@
         <div class="content-container" *ngSwitchCase="'currentPlaylist'">
             <div *ngFor="let track of currentPlaylist; index as i" class="tracks-list">
                 <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = currentPlaylist[i]">
-                  <img alt="add" class="add clickable" src="../assets/images/track_add.svg" />
-                  <img class="small-cover clickable" src="{{ track.coverLow }}" />
+                <img alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg" (click)="removeTrack(track, i)"/>
+
+                <img class="small-cover clickable" src="{{ track.coverLow }}" />
                   <div class="track-info">
                     <div class="track clickable track-spacing">{{ track.track }}</div>
                     <div class="artist clickable track-spacing">
