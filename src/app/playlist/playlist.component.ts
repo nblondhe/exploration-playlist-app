@@ -45,7 +45,8 @@ export class PlaylistComponent implements OnInit {
   onWindowScroll(e) {
      if (window.pageYOffset > 0) {
        const element = document.getElementById('tabHeader');
-       element.style.background = '#454d60';
+      //  element.style.background = '#454d60';
+      element.style.background = '#63adf2';
        const border = document.getElementById('border');
       border.style.boxShadow = '-13px 12px 24px -20px #000';
      } else {
@@ -220,43 +221,6 @@ export class PlaylistComponent implements OnInit {
           () => this.fillPlaylist()
     );
   }
-
-  // From critics-list 0--- fillTracks
-  // getTracks() {
-  //   let subscribeCount = 0;
-  //   const chunkSize = 99;
-  //   Object.entries(this.albums).forEach(([key, value]) => {
-  //     let id;
-  //     if (value['id']) {
-  //       id = value['id'];
-  //       this._spotify
-  //         .sendGet(`/albums/${id}/tracks`, this.accessToken)
-  //         .subscribe(
-  //           result => {
-  //             subscribeCount++;
-  //             result['items'].forEach(element => {
-  //               const last = this.tracks[this.tracks.length - 1];
-  //               if (!last || last.length === chunkSize) {
-  //                 this.tracks.push(['spotify:track:' + element['id']]);
-  //               } else {
-  //                 last.push('spotify:track:' + element['id']);
-  //               }
-  //             });
-  //           },
-  //           error => {
-  //             if (error) {
-  //               this.error = error;
-  //             }
-  //           },
-  //           () => {
-  //             if (subscribeCount === this.albums.length) {
-  //               this.buildList();
-  //             }
-  //           }
-  //         );
-  //     }
-  //   });
-  // }
 
   fillPlaylist() {
     const tracks = [];

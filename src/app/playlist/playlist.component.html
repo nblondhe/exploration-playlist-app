@@ -38,13 +38,36 @@
               </a>
           </div> -->
       </div>
-    </div>
-    <div class="wrapper playlist-actions">
+        <div class="content-container playlistWindow">
+            <div *ngFor="let track of currentPlaylist; index as i" class="tracks-list">
+              <div class="track-row" (click)="currentTrack = currentPlaylist[i]">
+                <img alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg" (click)="removeTrack(track, i)"/>
+                
+              <div class="currentPlaylist__trackInfo">
+                <div class="track track-spacing">{{ track.track }}</div>
+                <div class="artist" *ngFor="let artist of track.artists; index as j">
+                  {{ artist.name }}
+                  <span *ngIf="
+                  track.artists.length > 1 && j !== track.artists.length - 1
+                  ">,&nbsp;</span>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <div class="wrapper playlist-actions">
+            <a class="button button-med raised-white" (click)="clearPlaylist();">Clear Playlist</a>
+             <a class="button button-med" (click)="createPlaylist();">Create Playlist</a>
+             <div class="notif">Show me toast</div>
+          </div>
+      </div>
+    <!-- <div class="wrapper playlist-actions">
       <a class="button button-med raised-white" (click)="clearPlaylist();">Clear Playlist</a>
        <a class="button button-med" (click)="createPlaylist();">Create Playlist</a>
        <div class="notif">Show me toast</div>
-    </div>
-    <footer>
+    </div> -->
+    <!-- <footer>
       <h1 class="brand-med footer">Exploration</h1>
       <div class="user">
         <span>
@@ -62,8 +85,9 @@
         <div class="vr"></div>
         <a class="link" href="https://github.com/nblondhe/LikeBuilder">Github</a>
       </div>
-    </footer>
+    </footer> -->
   </div>
+
 
   <div class="rside">
     <div *ngIf="savedTracks" class="content-wrapper">
@@ -71,17 +95,30 @@
       <div id="tabHeader" class="tabContainer">
         <div class="tabHeader">
           <!-- <img alt="saved-tab-icon" class="saved-tab-icon" src="../assets/images/baseline-note.svg" /> -->
-          <div id="border" class="border">
-            <span class="tab" [class.active-tab]="tab == 'savedTracks'" (click)="tab = 'savedTracks'">
-              Saved Tracks
-            </span>
-            <span class="tab" [class.active-tab]="tab == 'currentPlaylist'" (click)="tab = 'currentPlaylist'">
-              Current Playlist
-            </span>
-          </div>
-          <!-- <a class="button" (click)="tab = 'currentPlaylist'">Current Playlist</a> -->
-          <!-- <a class="button button-med raised-white">Clear Playlist</a>
-            <a class="button button-med">Create Playlist</a> -->
+            <div id="border" class="border">
+                <!-- <div class="links">
+                    <a class="link" href="#">About</a>
+                    <div class="vr"></div>
+                    <a class="link" href="https://github.com/nblondhe/LikeBuilder">Github</a>
+                  </div> -->
+              <span class="tab" [class.active-tab]="tab == 'savedTracks'" (click)="tab = 'savedTracks'">
+                Exploration
+              </span>
+              <span style="font-size: 16px;">
+                  Saved Tracks and Recommendations
+                </span>
+                <!-- <div class="user">
+                    <span>
+                      Signed in as
+                    </span>
+                    <span class="username">
+                      <img alt="Spotify logo" class="spotify-logo" src="../assets/images/Spotify_Icon_RGB_White.png" />
+                      <a class="link" href="#">
+                        {{ spotifyUser }}
+                      </a>
+                    </span>
+                  </div> -->
+            </div>
           </div>
         </div>
       <!-- <div class="saved-sub-header">
@@ -144,7 +181,7 @@
         <!-- End Saved Track -->
 
         <!-- Current Playlist Tab -->
-        <div class="content-container" *ngSwitchCase="'currentPlaylist'">
+        <!-- <div class="content-container" *ngSwitchCase="'currentPlaylist'">
             <div *ngFor="let track of currentPlaylist; index as i" class="tracks-list">
                 <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = currentPlaylist[i]">
                 <img alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg" (click)="removeTrack(track, i)"/>
@@ -166,7 +203,7 @@
                 </div>
       
               </div>
-        </div>
+        </div> -->
         <!-- End Current Playlist -->
 
       </div>
