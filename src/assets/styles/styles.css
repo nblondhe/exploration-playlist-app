@@ -14,16 +14,6 @@
 
 }
 
-/* light */
-/*:root {
-    --accent: #1d8a99;
-    --accent-light: #b084cc;
-    --secondary: #f76f8e;
-    --remove: #F95E47;
-    --pane: #5c5c5c;
-    --sub-track: #6d6f7e;
-}*/
-
 html {
     font-family: 'Exo', sans-serif;
     color: var(--text);
@@ -43,10 +33,9 @@ html {
     display: flex;
     flex-direction: row;
     flex-flow: row wrap;
-    /* background-image: url("../images/34.png"); */
+    /* background-image: url("../images/104.png"); */
     background-size: cover;
     justify-content: center;
-    /* background: #8e99b3; */
     background: #877397;
     background: -webkit-linear-gradient(top left, #877397, #2C2E81);
     background: -moz-linear-gradient(top left, #877397, #2C2E81);
@@ -155,6 +144,8 @@ a, a:visited, a:hover {
     pointer-events: none;
 }
 
+/*  */
+/*  */
 /*  LEFT SIDE */
 .lside {
     flex: 3;
@@ -227,7 +218,11 @@ footer {
     margin-bottom: 42px;
 }
 /* END LEFT SIDE */
+/*  */
+/*  */
 
+/*  */
+/*  */
 /* RIGHT SIDE */
 .content-wrapper {
     flex: 4;
@@ -261,7 +256,8 @@ footer {
     font-weight: 800;
 }
 /*END  RIGHT SIDE */
-
+/*  */
+/*  */
 
 @media only screen and (max-width : 1024px) {
     .brand {
@@ -303,39 +299,3 @@ footer {
     }
 
 }
-
-/* Responsive album grid*/
-/*section {
-    padding: .5vw;
-    font-size: 0;
-    display: -ms-flexbox;
-    -ms-flex-wrap: wrap;
-    -ms-flex-direction: column;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
-    display: -webkit-box;
-    display: flex;
-}
-
-section div {
-    -webkit-box-flex: auto;
-    -ms-flex: auto;
-    flex: auto;
-    width: 64px;
-    margin: .05vw;
-}
-
-section div img {
-    width: 100%;
-    height: auto;
-}
-
-@media screen and (max-width: 400px) {
-    section div {
-        margin: 0;
-    }
-
-    section {
-        padding: 0;
-    }
-}*/

@@ -1,17 +1,24 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { SpotifyService } from '../spotify.service';
 import { JsonService } from '../json.service';
-// import recData from '../../assets/recommendationResults.json';
-// import savedData from './savedTracksResults.json';
-// import recData from './recommendationResults.json';
+import { notificationAnimations, NotifAnimationState } from './notification-animations';
 
-// const savedTrackResults = (savedData).items;
-// const recResults = (recData).tracks;
+export class Notification {
+  content: string;
+  style: string;
+  dismissed = false;
+
+  constructor(content, style?) {
+    this.content = content;
+    this.style = style || 'info';
+  }
+}
 
 @Component({
   selector: 'app-playlist',
   templateUrl: './playlist.component.html',
-  styleUrls: ['./playlist.component.css']
+  styleUrls: ['./playlist.component.css'],
+  animations: [notificationAnimations.fadeNotif]
 })
 export class PlaylistComponent implements OnInit {
   private token;
@@ -27,6 +34,8 @@ export class PlaylistComponent implements OnInit {
   tab = 'savedTracks';
   playlistId;
   userId;
+  notifications = [];
+  animationState: NotifAnimationState = 'default';
 
   constructor(private spotifyService: SpotifyService,
     private jsonService: JsonService) { }
@@ -212,7 +221,7 @@ export class PlaylistComponent implements OnInit {
 
   createPlaylist() {
     this.spotifyService.createPlaylist(this.userId, this.token).subscribe(
-          results => {
+      results => {
             this.playlistId = results['id'];
           },
           error => {
@@ -230,7 +239,6 @@ export class PlaylistComponent implements OnInit {
 
     Object.entries(this.currentPlaylist).forEach(([key, value]) => {
       const last = tracks[tracks.length - 1];
-      console.log(last);
       if (!last || last.length === chunkSize) {
         tracks.push(['spotify:track:' + value['id']]);
       } else {
@@ -238,16 +246,15 @@ export class PlaylistComponent implements OnInit {
       }
     });
 
-    console.log(tracks);
     tracks.forEach(segment => {
       this.spotifyService.buildPlaylist(this.userId, this.playlistId, this.token, segment)
         .subscribe(
           results => {
-            // playlist success!
-            // console.log(results);
+            this.sendNotification('Playlist added!', 'success');
           },
           error => {
             if (error) {
+              this.sendNotification('Error creating playlist.', 'error');
               this.error = error;
             }
           }
@@ -283,4 +290,24 @@ export class PlaylistComponent implements OnInit {
       }
     }
   }
+
+  sendNotification(content, style) {
+    const notification = new Notification(content, style);
+    this.notifications.push(notification);
+    console.log(this.notifications);
+  }
+  closeNotification(notif: Notification) {
+    const noteToDismiss = this.notifications.indexOf(notif);
+    this.notifications[noteToDismiss].dismissed = true;
+  }
+
+//   onFadeFinished(event: AnimationEvent) {
+//     const { toState } = event;
+//     const isFadeOut = (toState as NotifAnimationState) === 'closing';
+//     const itFinished = this.animationState === 'closing';
+
+//     if (isFadeOut && itFinished) {
+//         this.notifications = [];
+//     }
+// }
 }

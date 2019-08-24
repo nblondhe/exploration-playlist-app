@@ -1,5 +1,6 @@
-/*  LEFT SIDE  */
-
+/*  */
+/*  */
+/*  ALBUM DETAIL  */
 .album-cover {
     width: 75%;
     min-width: 275px;
@@ -83,16 +84,13 @@ table > tbody > tr > td.val {
     left: -25px;
     height: 20px;
 }
+/*  END ALBUM DETAIL */
+/*  */
+/*  */
 
 
-/* 
-.top {
-    display: flex;
-    flex-direction: row;
-    padding: 24px 48px;
-    justify-content: flex-start;
-} */
-
+/*  */
+/*  */
 /*  PLAYLIST HEADERS */
 .content-wrapper {
     /* background: var(--tab); */
@@ -191,6 +189,7 @@ img.remove-circle.clickable {
 .content-container.playlistWindow > .tracks-list > .track-row {
     padding: 8px 0;
 }
+/*  END CURRENT PLAYLIST WINDOW*/
 /*  */
 /*  */
 
@@ -203,7 +202,6 @@ img.remove-circle.clickable {
 }
 
 .tabContainer {
-    /* background: var(--tab); */
     width: 100%;
     position: sticky;
     top: 0;
@@ -211,10 +209,8 @@ img.remove-circle.clickable {
 }
 
 .tabHeader {
-    /* margin: 28px 0px 0px; */
     padding-top: 8px;
     position: relative;
-    /* border-bottom: solid 8px var(--accent); */
 }
 
 .header {
@@ -244,24 +240,6 @@ img.remove-circle.clickable {
     border-left: 1px solid white;
     height: 12px;
 }
-
-/* .link {
-    font-weight: 800;
-    color: var(--text);
-}
-
-.link:hover {
-    color: var(--accent);
-} */
-
-.border {
-    /* border-bottom: solid 3px var(--accent);
-    padding: 0 0 16px 76px; */
-    /* box-shadow: -13px 18px 24px -20px #000; */
-    /* border-bottom: solid 6px var(--accent); */
-    /* padding: 0 0 24px 0; */
-}
-
 
 .tabHeader > .border > span:hover {
     cursor: pointer;
@@ -309,24 +287,10 @@ img.remove-circle.clickable {
 
 }
 
-
-
-/* .active-tab {
-    border-bottom: solid 5px var(--accent);
-} */
-
 .active-tab {
-    /* border-bottom: solid 5px var(--accent); */
     color: white;
-    /* background: var(--accent); */
-    /* border-bottom: solid 5px var(--accent); */
-
 }
 
-
-/* .content-wrapper > .tabContainer > .tabHeader > .border >  div:nth-child(n+1):hover {
-    background: var(--accent);
-} */
 .content-wrapper > div > div > div > div:nth-child(n+1):hover {
     background: var(--accent);
 }
@@ -500,7 +464,6 @@ div.add-all > .add {
 
 .mute {
     opacity: .2;
-    /* visibility: hidden; */
 }
 
 .highlighted {
@@ -534,55 +497,38 @@ div.add-all > .add {
 /*  */
 /*  */
 /* TOAST */
-.notif {
-    position: fixed;
-    left: 20px;
-    bottom: -50px;
-    background-color: #323232;
-    padding: 12px 24px 17px 24px;
-    vertical-align: middle;
-    color: #fff;
-    box-shadow: 0 7px 18px rgba(0,0,0,0.2);
-    border-radius: 1px;
-    font-family: "Trebuchet MS", Helvetica, sans-serif;
-  }
-  
-  .peek {
-    -webkit-animation: peek 5s forwards;
-    -webkit-animation-delay: 0.5s;
-    animation: peek 5s forwards;
-    animation-delay: 500ms;
-  }
-  
-  .show {
-    -webkit-animation: show 0.5s forwards;
-    -webkit-animation-delay: 0.5s;
-    animation: show 0.5s forwards;
-    animation-delay: 500ms;
-  }
-  
-  @-webkit-keyframes peek {
-        0% { bottom: -50px; }
-       10% { bottom: 80px; }  /*demo purposes; change to 20px*/
-       90% { bottom: 80px; }  /*demo purposes; change to 20px*/
-      100% { bottom: -50px; }
-  }
-  
-  @keyframes peek {
-        0% { bottom: -50px; }
-       10% { bottom: 80px; }  /*demo purposes; change to 20px*/
-       90% { bottom: 80px; }  /*demo purposes; change to 20px*/
-      100% { bottom: -50px; }
-  }
-  
-  
-  @-webkit-keyframes show {
-      100% { bottom: 20px; }
-  }
-  
-  @keyframes show {
-      100% { bottom: 20px; }
-  }
+
+.notificationContainer {
+    position: absolute;
+    bottom: 0;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.notification {
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+    padding-top: 42px;
+}
+
+.notification__content {
+    width: 424px;
+    text-align: center;
+}
+
+.dismiss {
+    margin: 32px 0 24px 0;
+    width: 100px;
+    border: 0;
+}
+
+.notifSuccess {
+    background: var(--accent);
+}
+
+.notifError {
+    background: orange;
+}
+
 /*  */
 /*  */
 
@@ -591,17 +537,9 @@ div.add-all > .add {
 /*  MEDIA Q */
 @media only screen and (min-width : 684px) {
 
-    /* .expand.clickable.lg-screen,
-    .similar {
-        display: none;
-        visibility: hidden;
-    } */
     .clickable.sm-screen {
         display: none;
-    }
-
-
-    
+    }    
 }
 
 @media only screen and (max-width : 684px) {

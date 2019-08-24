@@ -73,7 +73,6 @@
       <div class="wrapper playlist-actions">
         <a class="button button-med outlined" (click)="clearPlaylist();">Clear Playlist</a>
         <a class="button button-med" (click)="createPlaylist();">Create Playlist</a>
-        <div class="notif">Show me toast</div>
       </div>
     </div>
     <footer>
@@ -89,6 +88,15 @@
         </span>
       </div>
     </footer>
+    <aside [@fadeAnimation]="{value: animationState, params:
+          { fadeIn: 200, fadeOut: 200 }}" (@fadeAnimation.done)="onFadeFinished($event)"
+      *ngFor="let notif of notifications" class="notificationContainer">
+      <div class="notification" *ngIf="!notif.dismissed" 
+      [ngClass]="{'notifError': notif.style=='error', 'notifSuccess': notif.style=='success'}">
+        <div class="notification__content">{{notif.content}}</div>
+        <button class="button button-med outlined dismiss" (click)="closeNotification(notif)">Close</button>
+      </div>
+    </aside>
   </div>
   <!-- END LEFT SIDE -->
 
