@@ -116,12 +116,14 @@ export class PlaylistComponent implements OnInit {
     },
     () => {
       this.savedTracks.forEach(element => {
-        this.getRecommendations(element.id);
+        this.getRecommendations(element.id, [element.artists, element.track]);
       });
     }
     );
   }
-  getRecommendations(id) {
+  getRecommendations(id, attributes) {
+    const basedOn = attributes[1] + ' - ' + attributes[0][0]['name'];
+    console.log('attrs', basedOn);
     this.spotifyService.getRecommendations(id, this.token).subscribe(data => {
       this.recStore[id] = data['tracks'].map(track => (
         {
@@ -132,6 +134,7 @@ export class PlaylistComponent implements OnInit {
           coverHigh: track['album']['images'][0]['url'],
           release: new Date(track['album']['release_date']),
           seedId: id,
+          basedOn: basedOn,
           id: track['id']
         }
       ));
@@ -140,7 +143,6 @@ export class PlaylistComponent implements OnInit {
     // console.log(this.recStore);
   }
 
-  // Replace with JQUERY?
   toggleRecommendation(event) {
     const anchor = event.target.parentNode.parentNode;
     const tracksList = anchor.parentNode;

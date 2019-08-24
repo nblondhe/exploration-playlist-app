@@ -60,7 +60,7 @@ table > tbody > tr > td.val {
 
 .actions {
     justify-content: flex-start;
-    padding-bottom: 48px;
+    padding-bottom: 24px;
 }
 
 .user {
@@ -110,9 +110,9 @@ table > tbody > tr > td.val {
     margin-top: 16px;
 }
 
-/*  CURRENT PLAYLIST */
-
-
+/*  */
+/*  */
+/*  CURRENT PLAYLIST WINDOW*/
 .playlistWrapper {
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     width: 100%;
@@ -126,9 +126,9 @@ table > tbody > tr > td.val {
     overflow: auto;
     overflow-y: scroll;
     height: 180px;
+    min-height: 180px;
     max-height: 180px;
     background: unset;
-    /* box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); */
     width: 80%;
 
     -webkit-box-shadow: inset 0 13px 12px -15px #000;
@@ -136,6 +136,20 @@ table > tbody > tr > td.val {
     box-shadow: inset 0 13px 12px -15px #000;
 
 }
+
+.content-container.playlistWindow::-webkit-scrollbar {
+  width: 10px;
+}
+.content-container.playlistWindow::-webkit-scrollbar-track {
+  background : rgba(255,255,255,0.0);
+  border-radius: 10px;
+}
+.content-container.playlistWindow::-webkit-scrollbar-thumb {
+  background : white; 
+  /* background: var(--secondary);    */
+  border-radius: 10px;
+  /* box-shadow:  0 0 6px rgba(0, 0, 0, 0.5); */
+} 
 
 .content-container.playlistWindow > .tracks-list {
     background: unset;
@@ -148,19 +162,37 @@ table > tbody > tr > td.val {
     margin-right: auto;
     width: 100%;
 }
+
+.content-container.playlistWindow > 
+.tracks-list >
+.track-row >
+img.remove-circle.clickable {
+    margin-left: 18px;
+}
+
 .currentPlaylist__trackInfo {
-    margin-left: 32px;
+    margin-left: 12px;
     display: flex;
+    vertical-align: bottom;
 }
 
 .currentPlaylist__trackInfo > .artist {
-    margin: 4px 0 0 24px;
+    margin: 6px 0 0 24px;
+}
+
+.currentPlaylist__detailSpacing {
+    margin-top: 6px;
+}
+
+.currentPlaylist__spacer {
+    height: 10px;
 }
 
 .content-container.playlistWindow > .tracks-list > .track-row {
     padding: 8px 0;
 }
-/* END CURRENT PLAYLIST */
+/*  */
+/*  */
 
 .track-row.action-header {
     color: var(--text);
@@ -179,17 +211,55 @@ table > tbody > tr > td.val {
 }
 
 .tabHeader {
-    margin: 28px 0px 0px;
+    /* margin: 28px 0px 0px; */
+    padding-top: 8px;
     position: relative;
     /* border-bottom: solid 8px var(--accent); */
 }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.headerDesc {
+    font-size: 14px; padding: 24px 48px 24px 48px;
+}
+
+.headerLinks {
+    display: flex;
+}
+
+.links.about {
+    justify-content: flex-end; flex: 1; margin-right: 48px;
+}
+
+.links.about > a {
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.vr {
+    margin: 20px 18px 0 18px;
+    border-left: 1px solid white;
+    height: 12px;
+}
+
+/* .link {
+    font-weight: 800;
+    color: var(--text);
+}
+
+.link:hover {
+    color: var(--accent);
+} */
 
 .border {
     /* border-bottom: solid 3px var(--accent);
     padding: 0 0 16px 76px; */
     /* box-shadow: -13px 18px 24px -20px #000; */
     /* border-bottom: solid 6px var(--accent); */
-    padding: 0 0 24px 0;
+    /* padding: 0 0 24px 0; */
 }
 
 
@@ -230,14 +300,16 @@ table > tbody > tr > td.val {
 .tab {
     /* margin-left: 48px; */
     color: var(--text-muted);
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 800;
     border-radius: 12px 12px 0 0;
 
-    padding: 24px 48px 24px 48px;
+    padding: 4px 48px 12px 48px;
     position: relative;
 
 }
+
+
 
 /* .active-tab {
     border-bottom: solid 5px var(--accent);
@@ -261,9 +333,9 @@ table > tbody > tr > td.val {
 /*  END PLAYLIST HEADERS */
 
 
-
+/*  */
+/*  */
 /*  TRACK ROW */
-
 .tracks-list {
     width: 100%;
     margin-right: auto;
@@ -292,7 +364,6 @@ table > tbody > tr > td.val {
     display: flex;
     flex-direction: row;
     padding: 18px 0px;
-    /* min-width: 375px; */
 }
 
 .small-cover {
@@ -330,13 +401,6 @@ table > tbody > tr > td.val {
     position: relative;
 }
 
-/* .similar {
-    position: absolute;
-    visibility: hidden;
-    top: 5px;
-    left: -64px;
-} */
-
 .similar {
     visibility: hidden;
     padding: 4px 64px 4px 12px;
@@ -346,7 +410,7 @@ table > tbody > tr > td.val {
 .expand {
     position: absolute;
     visibility: hidden;
-    left: 124px;
+    left: 165px;
     top: 2px;
 }
 
@@ -399,8 +463,12 @@ div.add-all > .add {
     align-self: center;
 }
 /*  END TRACK ROW */
+/*  */
+/*  */
 
 
+/*  */
+/*  */
 /*  COLLAPSED AND RECOMMENDATION ROW */
 .collapsed {
     max-height: 0;
@@ -459,8 +527,12 @@ div.add-all > .add {
     visibility: unset;
 }
 /* END COLLAPSED AND RECOMMENDATION ROW */
+/*  */
+/*  */
 
 
+/*  */
+/*  */
 /* TOAST */
 .notif {
     position: fixed;
@@ -511,8 +583,12 @@ div.add-all > .add {
   @keyframes show {
       100% { bottom: 20px; }
   }
+/*  */
+/*  */
 
-
+/*  */
+/*  */
+/*  MEDIA Q */
 @media only screen and (min-width : 684px) {
 
     /* .expand.clickable.lg-screen,
