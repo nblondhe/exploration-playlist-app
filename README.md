@@ -3,4 +3,4 @@
 Build Spotify playlists from saved tracks and recommendations
 ###### Hosted at [Netlify](http://exploration-app.netlify.com/ "Netlify")
 
-![Exploration Lists Home](./ELScreen.png)
+![Exploration Lists Home](ELScreen.png)
