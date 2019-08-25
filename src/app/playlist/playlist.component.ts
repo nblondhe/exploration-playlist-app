@@ -132,7 +132,6 @@ export class PlaylistComponent implements OnInit {
   }
   getRecommendations(id, attributes) {
     const basedOn = attributes[1] + ' - ' + attributes[0][0]['name'];
-    console.log('attrs', basedOn);
     this.spotifyService.getRecommendations(id, this.token).subscribe(data => {
       this.recStore[id] = data['tracks'].map(track => (
         {
@@ -149,7 +148,6 @@ export class PlaylistComponent implements OnInit {
       ));
       this.savedTracks[0]['recs'] = this.recommendations;
     });
-    // console.log(this.recStore);
   }
 
   toggleRecommendation(event) {
@@ -234,6 +232,7 @@ export class PlaylistComponent implements OnInit {
   }
 
   fillPlaylist() {
+    console.log('filling playlist');
     const tracks = [];
     const chunkSize = 99;
 
@@ -246,35 +245,27 @@ export class PlaylistComponent implements OnInit {
       }
     });
 
-    tracks.forEach(segment => {
-      this.spotifyService.buildPlaylist(this.userId, this.playlistId, this.token, segment)
+    if (tracks.length > 0) {
+      tracks.forEach(segment => {
+        this.spotifyService.buildPlaylist(this.userId, this.playlistId, this.token, segment)
         .subscribe(
           results => {
+            console.log('creating playlist' + results);
             this.sendNotification('Playlist added!', 'success');
           },
           error => {
+            console.log('creating playlist error');
             if (error) {
               this.sendNotification('Error creating playlist.', 'error');
               this.error = error;
             }
           }
-        );
-    });
-    // this.currentPlaylist.forEach(segment => {
-    //   this.spotifyService.buildPlaylist(this.userId, this.playlistId, this.token, segment)
-    //     .subscribe(
-    //       results => {
-    //         // playlist success!
-    //         // console.log(results);
-    //       },
-    //       error => {
-    //         if (error) {
-    //           this.error = error;
-    //         }
-    //       }
-    //     );
-    // });
-  }
+          );
+        });
+      } else {
+        this.sendNotification('Add saved or recommended tracks to create a playlist.', 'error');
+      }
+    }
 
   clearPlaylist() {
     this.currentPlaylist = [];
@@ -294,20 +285,20 @@ export class PlaylistComponent implements OnInit {
   sendNotification(content, style) {
     const notification = new Notification(content, style);
     this.notifications.push(notification);
-    console.log(this.notifications);
   }
   closeNotification(notif: Notification) {
     const noteToDismiss = this.notifications.indexOf(notif);
     this.notifications[noteToDismiss].dismissed = true;
   }
 
-//   onFadeFinished(event: AnimationEvent) {
-//     const { toState } = event;
-//     const isFadeOut = (toState as NotifAnimationState) === 'closing';
-//     const itFinished = this.animationState === 'closing';
+  onFadeFinished(event) {
+    const { toState } = event;
+    const isFadeOut = (toState as NotifAnimationState) === 'closing';
+    const itFinished = this.animationState === 'closing';
 
-//     if (isFadeOut && itFinished) {
-//         this.notifications = [];
-//     }
-// }
+    if (isFadeOut && itFinished) {
+        this.notifications = [];
+    }
+    console.log(this.notifications);
+}
 }

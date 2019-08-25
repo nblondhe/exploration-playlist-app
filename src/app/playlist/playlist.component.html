@@ -4,41 +4,43 @@
   <div class="lside">
     <div class="top-spacing"></div>
     <div class="actions">
-      <div class="wrapper">
-        <img class="album-cover" src="{{ currentTrack.coverHigh }}" />
-        <div class="current-track">
-          {{currentTrack.track}}
-          <!-- /
-          {{currentTrack.album}} -->
-        </div>
-        <div *ngFor="let artist of currentTrack.artists; index as i" class="current-artist">
-          {{ artist["name"] }}
-        </div>
-        <div class="album-detail">
-          <table class="albumDetail">
-            <tr>
-              <td class="attr">Album</td>
-              <td class="val">{{currentTrack.album}}</td>
-            </tr>
-            <tr>
-              <td class="attr">Released</td>
-              <td class="val">{{currentTrack.release | date : 'longDate'}}</td>
-            </tr>
-            <!-- <tr>
-              <td class="attr">Genre</td>
-              <td class="val">Ambient, Experimental</td>
-            </tr> -->
-            <tr *ngIf="currentTrack.addedOn">
-              <td class="attr">Added on</td>
-              <td class="val">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</td>
-            </tr>
-            <tr *ngIf="currentTrack.basedOn">
+      <div *ngIf="currentTrack" class="wrapper">
+          <img class="album-cover" src="{{ currentTrack.coverHigh }}" />
+          <div class="current-track">
+            {{currentTrack.track}}
+            <!-- /
+              {{currentTrack.album}} -->
+          </div>
+          <div class="currentArtists">
+    
+            <div *ngFor="let artist of currentTrack.artists; index as i" class="current-artist">
+              {{ artist["name"] }}
+            </div>
+          </div>
+          <div class="album-detail">
+            <table class="albumDetail">
+              <tr>
+                <td class="attr">Album</td>
+                <td class="val">{{ currentTrack.album }}</td>
+              </tr>
+              <tr>
+                <td class="attr">Released</td>
+                <td class="val">{{currentTrack.release | date : 'longDate'}}</td>
+              </tr>
+              <!-- <tr>
+                  <td class="attr">Genre</td>
+                  <td class="val">Ambient, Experimental</td>
+                </tr> -->
+              <tr *ngIf="currentTrack.addedOn">
+                <td class="attr">Added on</td>
+                <td class="val">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</td>
+              </tr>
+              <tr *ngIf="currentTrack.basedOn">
                 <td class="attr">Similar to</td>
                 <td class="val">{{currentTrack.basedOn}}</td>
               </tr>
-          </table>
-        </div>
-
+            </table>
+          </div>
       </div>
 
       <!-- CURRENT PLAYLIST WINDOW -->
@@ -89,7 +91,7 @@
       </div>
     </footer>
     <aside [@fadeAnimation]="{value: animationState, params:
-          { fadeIn: 200, fadeOut: 200 }}" (@fadeAnimation.done)="onFadeFinished($event)"
+          { fadeIn: 350, fadeOut: 350 }}" (@fadeAnimation.done)="onFadeFinished($event)"
       *ngFor="let notif of notifications" class="notificationContainer">
       <div class="notification" *ngIf="!notif.dismissed" 
       [ngClass]="{'notifError': notif.style=='error', 'notifSuccess': notif.style=='success'}">
@@ -113,7 +115,7 @@
                 <div class="links about">
                   <a class="link" href="#">About</a>
                   <div class="vr"></div>
-                  <a class="link" href="https://github.com/nblondhe/LikeBuilder">Github</a>
+                  <a class="link" href="https://github.com/nblondhe/exploration-playlist-app">Github</a>
                 </div>
               </div>
 

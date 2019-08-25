@@ -12,12 +12,6 @@ export class SpotifyService {
   private authURL = 'https://accounts.spotify.com/authorize';
   private spotifyURL = 'https://api.spotify.com/v1/';
 
-  // private httpOptions = {
-  //   headers: new HttpHeaders({
-  //     'Content-Type': 'application/json'
-  //   })
-  // };
-
   constructor(private httpClient: HttpClient) {
   }
 
@@ -40,11 +34,10 @@ export class SpotifyService {
     return this.get(uri, token);
   }
 
-  // Add arg to name playlist dynamically
   public createPlaylist(id, token) {
       const postData = {
-        name: 'Exploration Builder',
-        description: 'Curated by you. From Saved tracks and Spotify recommendations.',
+        name: 'Exploration',
+        description: 'Curated by you. http://exploration-app.netlify.com',
         public: false
       };
       const uri = `users/${id}/playlists`;
@@ -80,7 +73,7 @@ export class SpotifyService {
   private handleError(error: HttpErrorResponse) {
     let userMessage;
     if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
+      // A client-side or network error occurred.
       console.error('An error occurred:', error.error.message);
     } else {
       const spotifyError = error.error.error;

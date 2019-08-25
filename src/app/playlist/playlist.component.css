@@ -17,6 +17,10 @@
     text-align: center;
 }
 
+.currentArtists {
+    min-height: 36px;
+}
+
 table {
     margin: 16px 0;
     border-spacing: 24px 6px;
@@ -500,19 +504,21 @@ div.add-all > .add {
 
 .notificationContainer {
     position: absolute;
-    bottom: 0;
+    bottom: 16px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
 .notification {
-    border-radius: 8px 8px 0 0;
+    /* border-radius: 8px 8px 0 0; */
+    border-radius: 10px;
     text-align: center;
-    padding-top: 42px;
+    padding: 42px 24px 0 24px;
 }
 
 .notification__content {
     width: 424px;
     text-align: center;
+    font-weight: 800;
 }
 
 .dismiss {
@@ -526,7 +532,7 @@ div.add-all > .add {
 }
 
 .notifError {
-    background: orange;
+    background: #e0923a ;
 }
 
 /*  */
