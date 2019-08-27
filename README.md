@@ -1,5 +1,4 @@
-# Exploration Lists
-
+# Exploration Lists (work-in-progress)
 Build Spotify playlists from saved tracks and recommendations
 ###### Hosted at [Netlify](http://exploration-app.netlify.com/ "Netlify")
 
