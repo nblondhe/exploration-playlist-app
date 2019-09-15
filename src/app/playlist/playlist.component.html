@@ -27,10 +27,6 @@
                 <td class="attr">Released</td>
                 <td class="val">{{currentTrack.release | date : 'longDate'}}</td>
               </tr>
-              <!-- <tr>
-                  <td class="attr">Genre</td>
-                  <td class="val">Ambient, Experimental</td>
-                </tr> -->
               <tr *ngIf="currentTrack.addedOn">
                 <td class="attr">Added on</td>
                 <td class="val">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</td>
@@ -68,7 +64,6 @@
           </div>
         </div>
         <div class="currentPlaylist__spacer"></div>
-
       </div>
       <!-- END CURRENT PLAYLIST WINDOW -->
 
@@ -108,7 +103,6 @@
 
       <div id="tabHeader" class="tabContainer">
         <div class="tabHeader">
-          <!-- <img alt="saved-tab-icon" class="saved-tab-icon" src="../assets/images/baseline-note.svg" /> -->
           <div id="border" class="border">
             <section>
               <div class="headerLinks">
@@ -135,7 +129,7 @@
       <div class="content-container" [ngSwitch]="tab">
         <div class="content-container" *ngSwitchCase="'savedTracks'">
           <!-- SAVED TRACKS AND RECOMMENDATIONS -->
-          <div *ngFor="let track of savedTracks; index as i" class="tracks-list">
+          <div *ngFor="let track of savedTracks; index as i; trackBy: trackById" class="tracks-list">
             <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = savedTracks[i]">
               <img *ngIf="!track.added" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
                 (click)="addTrack(track,'saved', i)" />
@@ -168,7 +162,7 @@
 
             <div class="collapsed ">
               <!-- INNER RECOMMENDATION TRACKS -->
-              <div *ngFor="let rec of recStore[track.id]; index as k;"
+              <div *ngFor="let rec of recStore[track.id]; index as k; trackBy: trackById"
                 [ngClass]="{'collapsed-bottom-inset': k == 4, 'collapsed-top-inset': k == 0}" class="track-row rec-row"
                 (click)="currentTrack = recStore[track.id][k]">
                 <img *ngIf="!rec.added" alt="add" class="add clickable" src="../assets/images/add_circle.svg"

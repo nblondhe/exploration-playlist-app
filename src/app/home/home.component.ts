@@ -23,7 +23,6 @@ export class HomeComponent implements OnInit {
           if (!this.isExpired()) {
             this.logged_in = true;
           } else {
-            console.log('token expired calling spotify login');
             this.spotifyService.login();
           }
         }
@@ -34,7 +33,7 @@ export class HomeComponent implements OnInit {
   isExpired() {
     const tokenDate = JSON.parse(localStorage.getItem('timestamp'));
     const now = new Date().getTime().toString();
-    const expired = now > ((1000 * 60 * 60) + tokenDate);
+    const expired = now > ((1800) + tokenDate);
     return expired;
   }
 

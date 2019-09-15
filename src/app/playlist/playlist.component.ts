@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { SpotifyService } from '../spotify.service';
 import { JsonService } from '../json.service';
 import { notificationAnimations, NotifAnimationState } from './notification-animations';
@@ -21,8 +21,8 @@ export class Notification {
   animations: [notificationAnimations.fadeNotif]
 })
 export class PlaylistComponent implements OnInit {
-  private token;
-  error;
+  private token: string;
+  error: string;
   @ViewChild('collapseAnchor') collapseAnchor;
   spotifyUser: string;
   savedTracks = [];
@@ -32,8 +32,8 @@ export class PlaylistComponent implements OnInit {
   recStore = {};
   currentTrack = {};
   tab = 'savedTracks';
-  playlistId;
-  userId;
+  playlistId: string;
+  userId: string;
   notifications = [];
   animationState: NotifAnimationState = 'default';
 
@@ -50,20 +50,23 @@ export class PlaylistComponent implements OnInit {
     this.getSavedTracks();
   }
 
+  trackById(i, id) {
+    return id;
+  }
+
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(e) {
-     if (window.pageYOffset > 0) {
-       const element = document.getElementById('tabHeader');
-      //  element.style.background = '#454d60';
+    if (window.pageYOffset > 0) {
+      const element = document.getElementById('tabHeader');
       element.style.background = '#63adf2';
-       const border = document.getElementById('border');
+      const border = document.getElementById('border');
       border.style.boxShadow = '-13px 12px 24px -20px #000';
-     } else {
+    } else {
       const element = document.getElementById('tabHeader');
       const border = document.getElementById('border');
       element.style.background = 'unset';
       border.style.boxShadow = 'unset';
-     }
+    }
   }
 
   getSavedTracks() {
@@ -118,18 +121,19 @@ export class PlaylistComponent implements OnInit {
       ));
       this.currentTrack = this.savedTracks[0];
     },
-    error => {
-      if (error) {
-        this.error = error;
+      error => {
+        if (error) {
+          this.error = error;
+        }
+      },
+      () => {
+        this.savedTracks.forEach(element => {
+          this.getRecommendations(element.id, [element.artists, element.track]);
+        });
       }
-    },
-    () => {
-      this.savedTracks.forEach(element => {
-        this.getRecommendations(element.id, [element.artists, element.track]);
-      });
-    }
     );
   }
+
   getRecommendations(id, attributes) {
     const basedOn = attributes[1] + ' - ' + attributes[0][0]['name'];
     this.spotifyService.getRecommendations(id, this.token).subscribe(data => {
@@ -150,45 +154,6 @@ export class PlaylistComponent implements OnInit {
     });
   }
 
-  toggleRecommendation(event) {
-    const anchor = event.target.parentNode.parentNode;
-    const tracksList = anchor.parentNode;
-    const allSavedChildren = anchor.parentNode.parentNode.children;
-
-    if (anchor.classList.contains('highlighted')) {
-      anchor.classList.remove('highlighted');
-    } else {
-      anchor.classList.add('highlighted');
-    }
-
-    const panel = anchor.nextElementSibling;
-    // Display
-    if (panel.style.display === 'flex') {
-      panel.style.display = 'none';
-    } else {
-      panel.style.display = 'flex';
-    }
-    // Ease drop down
-    if (panel.style.maxHeight){
-      panel.style.maxHeight = null;
-      panel.style.webkitTransition = 'max-height 1s ease-in-out';
-    } else {
-      panel.style.maxHeight = panel.scrollHeight + '8' + 'px';
-      panel.style.webkitTransition = 'max-height 1s ease-in-out';
-    }
-
-    for (let i = 0; i < allSavedChildren.length; i++) {
-      const current = allSavedChildren[i];
-      // Mute not selected
-      if (current !== tracksList) {
-        if (current.classList.contains('mute')) {
-           current.classList.remove('mute');
-        } else {
-           current.classList.add('mute');
-        }
-      }
-    }
-  }
 
   addTrack(track, structure, i, recTrackIndex = null) {
     if (structure === 'saved') {
@@ -220,19 +185,18 @@ export class PlaylistComponent implements OnInit {
   createPlaylist() {
     this.spotifyService.createPlaylist(this.userId, this.token).subscribe(
       results => {
-            this.playlistId = results['id'];
-          },
-          error => {
-            if (error) {
-              this.error = error;
-            }
-          },
-          () => this.fillPlaylist()
+        this.playlistId = results['id'];
+      },
+      error => {
+        if (error) {
+          this.error = error;
+        }
+      },
+      () => this.fillPlaylist()
     );
   }
 
   fillPlaylist() {
-    console.log('filling playlist');
     const tracks = [];
     const chunkSize = 99;
 
@@ -248,24 +212,22 @@ export class PlaylistComponent implements OnInit {
     if (tracks.length > 0) {
       tracks.forEach(segment => {
         this.spotifyService.buildPlaylist(this.userId, this.playlistId, this.token, segment)
-        .subscribe(
-          results => {
-            console.log('creating playlist' + results);
-            this.sendNotification('Playlist added!', 'success');
-          },
-          error => {
-            console.log('creating playlist error');
-            if (error) {
-              this.sendNotification('Error creating playlist.', 'error');
-              this.error = error;
+          .subscribe(
+            results => {
+              this.sendNotification('Playlist added!', 'success');
+            },
+            error => {
+              if (error) {
+                this.sendNotification('Error creating playlist.', 'error');
+                this.error = error;
+              }
             }
-          }
           );
-        });
-      } else {
-        this.sendNotification('Add saved or recommended tracks to create a playlist.', 'error');
-      }
+      });
+    } else {
+      this.sendNotification('Add saved or recommended tracks to create a playlist.', 'error');
     }
+  }
 
   clearPlaylist() {
     this.currentPlaylist = [];
@@ -275,9 +237,9 @@ export class PlaylistComponent implements OnInit {
     });
     for (const baseTrack in this.recStore) {
       if (this.recStore.hasOwnProperty(baseTrack)) {
-          this.recStore[baseTrack].forEach(element => {
-            element.added = false;
-          });
+        this.recStore[baseTrack].forEach(element => {
+          element.added = false;
+        });
       }
     }
   }
@@ -297,8 +259,48 @@ export class PlaylistComponent implements OnInit {
     const itFinished = this.animationState === 'closing';
 
     if (isFadeOut && itFinished) {
-        this.notifications = [];
+      this.notifications = [];
     }
-    console.log(this.notifications);
-}
+  }
+
+  toggleRecommendation(event) {
+    const anchor = event.target.parentNode.parentNode;
+    const tracksList = anchor.parentNode;
+    const allSavedChildren = anchor.parentNode.parentNode.children;
+
+    if (anchor.classList.contains('highlighted')) {
+      anchor.classList.remove('highlighted');
+    } else {
+      anchor.classList.add('highlighted');
+    }
+
+    const panel = anchor.nextElementSibling;
+    // Display
+    if (panel.style.display === 'flex') {
+      panel.style.display = 'none';
+    } else {
+      panel.style.display = 'flex';
+    }
+    // Ease drop down
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+      panel.style.webkitTransition = 'max-height 1s ease-in-out';
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + '8' + 'px';
+      panel.style.webkitTransition = 'max-height 1s ease-in-out';
+    }
+
+    for (let i = 0; i < allSavedChildren.length; i++) {
+      const current = allSavedChildren[i];
+      // Mute not selected
+      if (current !== tracksList) {
+        if (current.classList.contains('mute')) {
+          current.classList.remove('mute');
+        } else {
+          current.classList.add('mute');
+        }
+      }
+    }
+  }
+
 }

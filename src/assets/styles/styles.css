@@ -173,9 +173,20 @@ a, a:visited, a:hover {
     justify-content: center;
 }
 
+.actions.landing {
+    width: unset;
+}
+
 .wrapper {
     flex-direction: column;
     width: 100%;
+    max-width: 475px;
+    display: flex;
+    align-items: center;
+}
+
+.landing {
+    flex-direction: column;
     max-width: 475px;
     display: flex;
     align-items: center;
