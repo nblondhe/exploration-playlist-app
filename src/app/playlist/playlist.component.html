@@ -160,11 +160,11 @@
               </div>
             </div>
 
-            <div class="collapsed ">
+            <div id="panel-{{ i }}" class="collapsed ">
               <!-- INNER RECOMMENDATION TRACKS -->
-              <div *ngFor="let rec of recStore[track.id]; index as k; trackBy: trackById"
+              <div *ngFor="let rec of recommendations[track.id]; index as k; trackBy: trackById"
                 [ngClass]="{'collapsed-bottom-inset': k == 4, 'collapsed-top-inset': k == 0}" class="track-row rec-row"
-                (click)="currentTrack = recStore[track.id][k]">
+                (click)="currentTrack = recommendations[track.id][k]">
                 <img *ngIf="!rec.added" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
                   (click)="addTrack(rec, 'recommended', track.id, k)" />
                 <img *ngIf="rec.added" alt="remove" class="remove-circle clickable"

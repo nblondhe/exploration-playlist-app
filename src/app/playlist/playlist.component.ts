@@ -27,14 +27,16 @@ export class PlaylistComponent implements OnInit {
   spotifyUser: string;
   savedTracks = [];
   currentPlaylist = [];
-  recommendations = [];
+  // recommendations = [];
   trackIds = [];
-  recStore = {};
+  recommendations = {};
   currentTrack = {};
   tab = 'savedTracks';
   playlistId: string;
   userId: string;
   notifications = [];
+  activePanelId: string;
+  activePanel = {};
   animationState: NotifAnimationState = 'default';
 
   constructor(private spotifyService: SpotifyService,
@@ -71,41 +73,7 @@ export class PlaylistComponent implements OnInit {
 
   getSavedTracks() {
     // Temp JSON data
-    // this.jsonService.getSavedTracks().subscribe(data => {
-    //   this.savedTracks = data['items'].map(track => (
-    //     {
-    //       artists: track['track']['artists'],
-    //       track: track['track']['name'],
-    //       album: track['track']['album']['name'],
-    //       coverLow: track['track']['album']['images'][2]['url'],
-    //       coverHigh: track['track']['album']['images'][0]['url'],
-    //       id: track['track']['id'],
-    //       release: new Date(track['track']['album']['release_date']),
-    //       addedOn: new Date(track['added_at']),
-    //       album_id: track['track']['album']['id'],
-    //     }
-    //   ));
-    //   this.currentTrack = this.savedTracks[0];
-    //   this.jsonService.getRecs().subscribe(recs => {
-
-    //     this.savedTracks.forEach(element => {
-    //       this.recStore[element.id] = recs['tracks'].map(track => (
-    //         {
-    //           artists: track['artists'],
-    //           track: track['name'],
-    //           album: track['album']['name'],
-    //           coverLow: track['album']['images'][2]['url'],
-    //           coverHigh: track['album']['images'][0]['url'],
-    //           release: new Date(track['album']['release_date']),
-    //           seedId: element.id,
-    //           id: track['id']
-    //         }
-    //       ));
-    //     });
-    //   });
-    // });
-
-    this.spotifyService.getSavedTracks(this.token).subscribe(data => {
+    this.jsonService.getSavedTracks().subscribe(data => {
       this.savedTracks = data['items'].map(track => (
         {
           artists: track['track']['artists'],
@@ -120,24 +88,58 @@ export class PlaylistComponent implements OnInit {
         }
       ));
       this.currentTrack = this.savedTracks[0];
-    },
-      error => {
-        if (error) {
-          this.error = error;
-        }
-      },
-      () => {
+      this.jsonService.getRecs().subscribe(recs => {
+
         this.savedTracks.forEach(element => {
-          this.getRecommendations(element.id, [element.artists, element.track]);
+          this.recommendations[element.id] = recs['tracks'].map(track => (
+            {
+              artists: track['artists'],
+              track: track['name'],
+              album: track['album']['name'],
+              coverLow: track['album']['images'][2]['url'],
+              coverHigh: track['album']['images'][0]['url'],
+              release: new Date(track['album']['release_date']),
+              seedId: element.id,
+              id: track['id']
+            }
+          ));
         });
-      }
-    );
+      });
+    });
+
+    // this.spotifyService.getSavedTracks(this.token).subscribe(data => {
+    //   this.savedTracks = data['items'].map(track => (
+    //     {
+    //       artists: track['track']['artists'],
+    //       track: track['track']['name'],
+    //       album: track['track']['album']['name'],
+    //       coverLow: track['track']['album']['images'][2]['url'],
+    //       coverHigh: track['track']['album']['images'][0]['url'],
+    //       id: track['track']['id'],
+    //       release: new Date(track['track']['album']['release_date']),
+    //       addedOn: new Date(track['added_at']),
+    //       album_id: track['track']['album']['id'],
+    //     }
+    //   ));
+    //   this.currentTrack = this.savedTracks[0];
+    // },
+    //   error => {
+    //     if (error) {
+    //       this.error = error;
+    //     }
+    //   },
+    //   () => {
+    //     this.savedTracks.forEach(element => {
+    //       this.getRecommendations(element.id, [element.artists, element.track]);
+    //     });
+    //   }
+    // );
   }
 
   getRecommendations(id, attributes) {
     const basedOn = attributes[1] + ' - ' + attributes[0][0]['name'];
     this.spotifyService.getRecommendations(id, this.token).subscribe(data => {
-      this.recStore[id] = data['tracks'].map(track => (
+      this.recommendations[id] = data['tracks'].map(track => (
         {
           artists: track['artists'],
           track: track['name'],
@@ -150,7 +152,7 @@ export class PlaylistComponent implements OnInit {
           id: track['id']
         }
       ));
-      this.savedTracks[0]['recs'] = this.recommendations;
+      this.savedTracks[0]['recs'] = [];
     });
   }
 
@@ -161,7 +163,7 @@ export class PlaylistComponent implements OnInit {
       this.savedTracks[i]['added'] = true;
     } else {
       this.currentPlaylist.push(track);
-      this.recStore[i][recTrackIndex]['added'] = true;
+      this.recommendations[i][recTrackIndex]['added'] = true;
     }
   }
 
@@ -171,8 +173,8 @@ export class PlaylistComponent implements OnInit {
         this.currentPlaylist.splice(i, 1);
 
         if (track.seedId) {
-          index = this.recStore[track.seedId].findIndex(element => element.id === track.id);
-          this.recStore[track.seedId][index]['added'] = false;
+          index = this.recommendations[track.seedId].findIndex(element => element.id === track.id);
+          this.recommendations[track.seedId][index]['added'] = false;
         } else {
           index = this.savedTracks.findIndex(element => element.id === track.id);
           this.savedTracks[index]['added'] = false;
@@ -235,9 +237,9 @@ export class PlaylistComponent implements OnInit {
     this.savedTracks.forEach(element => {
       element.added = false;
     });
-    for (const baseTrack in this.recStore) {
-      if (this.recStore.hasOwnProperty(baseTrack)) {
-        this.recStore[baseTrack].forEach(element => {
+    for (const baseTrack in this.recommendations) {
+      if (this.recommendations.hasOwnProperty(baseTrack)) {
+        this.recommendations[baseTrack].forEach(element => {
           element.added = false;
         });
       }
@@ -265,31 +267,58 @@ export class PlaylistComponent implements OnInit {
 
   toggleRecommendation(event) {
     const anchor = event.target.parentNode.parentNode;
-    const tracksList = anchor.parentNode;
-    const allSavedChildren = anchor.parentNode.parentNode.children;
+    const clickedPanel = anchor.nextElementSibling;
 
-    if (anchor.classList.contains('highlighted')) {
-      anchor.classList.remove('highlighted');
+    if (this.activePanel['element'] &&
+    this.activePanel['element'] === clickedPanel) {
+      if (this.activePanel['opened'] === true) {
+        this.togglePanel(anchor, clickedPanel, 'close');
+      } else {
+        this.togglePanel(anchor, clickedPanel);
+      }
+    } else if (this.activePanel['element']) {
+      this.togglePanel(anchor, this.activePanel['element'], 'close');
+      this.toggleHighlight(this.activePanel['anchor'], 'deselect');
+      this.activePanel = {};
+      this.togglePanel(anchor, clickedPanel);
     } else {
-      anchor.classList.add('highlighted');
+      this.togglePanel(anchor, clickedPanel);
     }
 
-    const panel = anchor.nextElementSibling;
-    // Display
-    if (panel.style.display === 'flex') {
+    // const tracksList = anchor.parentNode;
+    // const allSavedTracks = anchor.parentNode.parentNode.children;
+    // this.muteUnselectedTracks(allSavedTracks, tracksList);
+  }
+
+  togglePanel(collapsedAnchor, panel, action?) {
+    if (action === 'close') {
+      this.toggleHighlight(collapsedAnchor, 'deselect');
       panel.style.display = 'none';
-    } else {
-      panel.style.display = 'flex';
-    }
-    // Ease drop down
-    if (panel.style.maxHeight) {
       panel.style.maxHeight = null;
-      panel.style.webkitTransition = 'max-height 1s ease-in-out';
-    } else {
-      panel.style.maxHeight = panel.scrollHeight + '8' + 'px';
-      panel.style.webkitTransition = 'max-height 1s ease-in-out';
-    }
+      panel.style.webkitTransition = 'max-height .2s ease-in-out';
 
+      this.activePanel['opened'] = false;
+    } else {
+      this.toggleHighlight(collapsedAnchor);
+      panel.style.display = 'flex';
+      panel.style.maxHeight = panel.scrollHeight + '8' + 'px';
+      panel.style.webkitTransition = 'max-height .2s ease-in-out';
+
+      this.activePanel['element'] = panel;
+      this.activePanel['opened'] = true;
+      this.activePanel['anchor'] = collapsedAnchor;
+    }
+  }
+
+  toggleHighlight(element, action?) {
+    if (action === 'deselect') {
+      element.classList.remove('highlighted');
+    } else {
+      element.classList.add('highlighted');
+    }
+  }
+
+  muteUnselectedTracks(allSavedChildren, tracksList) {
     for (let i = 0; i < allSavedChildren.length; i++) {
       const current = allSavedChildren[i];
       // Mute not selected
