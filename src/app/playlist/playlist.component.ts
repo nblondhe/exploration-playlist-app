@@ -4,6 +4,8 @@ import { JsonService } from '../json.service';
 import { notificationAnimations, NotifAnimationState } from './notification-animations';
 import { SavedTrack } from '../savedTrack';
 import { SpotifyUser } from '../spotifyUser';
+import { Track } from '../track';
+import { RecommendedTrack } from '../recommendedTrack';
 
 export class Notification {
   content: string;
@@ -36,8 +38,11 @@ export class PlaylistComponent implements OnInit {
   activePanel = {};
   animationState: NotifAnimationState = 'default';
 
+  recsFetched: boolean;
+
   savedTracks: SavedTrack[];
-  // TrackRecommmendations map;
+  trackRecommendationMap: {[id: string]: Array<RecommendedTrack>; } = {};
+  // trackRecommendationMap: Map<string, []>;
   recommendations = {};
 
   constructor(private spotifyService: SpotifyService,
@@ -53,8 +58,18 @@ export class PlaylistComponent implements OnInit {
     this.getSavedTracks();
   }
 
+  // When making changes to track collection,
+  // DOM should only re-render the returned id - not all of collection
   trackById(i, id) {
     return id;
+  }
+
+  hasRecommendations(trackId: string): boolean {
+    if (this.recsFetched && this.trackRecommendationMap[trackId]) {
+      return this.trackRecommendationMap[trackId].length > 0;
+    } else {
+      return false;
+    }
   }
 
   @HostListener('window:scroll', ['$event'])
@@ -92,7 +107,7 @@ export class PlaylistComponent implements OnInit {
     //   this.jsonService.getRecs().subscribe(recs => {
 
     //     this.savedTracks.forEach(element => {
-    //       this.recommendations[element.id] = recs['tracks'].map(track => (
+    //       this.trackRecommendationMap[element.id] = recs['tracks'].map(track => (
     //         {
     //           artists: track['artists'],
     //           track: track['name'],
@@ -127,37 +142,37 @@ export class PlaylistComponent implements OnInit {
     );
   }
 
-  getRecommendations(id, attributes) {
+  getRecommendations(id: string, attributes: any[]) {
     this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
-      this.recommendations[id] = recommendedTracks;
-      this.savedTracks[0]['recs'] = [];
+      this.trackRecommendationMap[id] = recommendedTracks;
     }, error => {
       if (error) {
         this.error = error;
       }
-    }
+    },
+    () => this.recsFetched = true
   );
   }
 
 
-  addTrack(track, structure, i, recTrackIndex = null) {
+  addTrack<T extends Track>(track: T, structure: string, i: string, recTrackIndex: string = null) {
     if (structure === 'saved') {
       this.currentPlaylist.push(track);
       this.savedTracks[i]['addedToPlaylist'] = true;
     } else {
       this.currentPlaylist.push(track);
-      this.recommendations[i][recTrackIndex]['addedToPlaylist'] = true;
+      this.trackRecommendationMap[i][recTrackIndex]['addedToPlaylist'] = true;
     }
   }
 
-  removeTrack(track, index) {
+  removeTrack<T extends Track>(track: T, index) {
     for (let i = 0; i < this.currentPlaylist.length; i++) {
       if (this.currentPlaylist[i].id === track.id) {
         this.currentPlaylist.splice(i, 1);
 
-        if (track.seedId) {
-          index = this.recommendations[track.seedId].findIndex(element => element.id === track.id);
-          this.recommendations[track.seedId][index]['addedToPlaylist'] = false;
+        if (track instanceof RecommendedTrack && track.seedId) {
+          index = this.trackRecommendationMap[track.seedId].findIndex(element => element.id === track.id);
+          this.trackRecommendationMap[track.seedId][index]['addedToPlaylist'] = false;
         } else {
           index = this.savedTracks.findIndex(element => element.id === track.id);
           this.savedTracks[index]['addedToPlaylist'] = false;
@@ -181,7 +196,7 @@ export class PlaylistComponent implements OnInit {
         () => this.fillPlaylist()
       );
     } else {
-      this.sendNotification('Add saved or recommended tracks to create a playlist.', 'error');      
+      this.sendNotification('Add saved or recommended tracks to create a playlist.', 'error');
     }
   }
 
@@ -222,10 +237,10 @@ export class PlaylistComponent implements OnInit {
       this.savedTracks[i].addedToPlaylist = false;
     }
 
-    for (const baseTrackKey in this.recommendations) {
-      if (this.recommendations.hasOwnProperty(baseTrackKey)) {
-        for (let i = 0; i < this.recommendations[baseTrackKey].length; i++) {
-          this.recommendations[baseTrackKey][i].addedToPlaylist = false;
+    for (const baseTrackKey in this.trackRecommendationMap) {
+      if (this.trackRecommendationMap.hasOwnProperty(baseTrackKey)) {
+        for (let i = 0; i < this.trackRecommendationMap[baseTrackKey].length; i++) {
+          this.trackRecommendationMap[baseTrackKey][i].addedToPlaylist = false;
         }
       }
     }
@@ -303,18 +318,18 @@ export class PlaylistComponent implements OnInit {
     }
   }
 
-  muteUnselectedTracks(allSavedChildren, tracksList) {
-    for (let i = 0; i < allSavedChildren.length; i++) {
-      const current = allSavedChildren[i];
-      // Mute not selected
-      if (current !== tracksList) {
-        if (current.classList.contains('mute')) {
-          current.classList.remove('mute');
-        } else {
-          current.classList.add('mute');
-        }
-      }
-    }
-  }
+  // muteUnselectedTracks(allSavedChildren, tracksList) {
+  //   for (let i = 0; i < allSavedChildren.length; i++) {
+  //     const current = allSavedChildren[i];
+  //     // Mute not selected
+  //     if (current !== tracksList) {
+  //       if (current.classList.contains('mute')) {
+  //         current.classList.remove('mute');
+  //       } else {
+  //         current.classList.add('mute');
+  //       }
+  //     }
+  //   }
+  // }
 
 }
