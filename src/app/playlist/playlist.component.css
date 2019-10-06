@@ -17,9 +17,9 @@
     text-align: center;
 }
 
-.currentArtists {
+/* .currentArtists {
     min-height: 36px;
-}
+} */
 
 table {
     margin: 16px 0;
@@ -48,6 +48,9 @@ table > tbody > tr > td.val {
     width: 40%;
     margin-right: 16px;
 }
+.wrapper.actionsDetail {
+    min-height: 600px;
+}
 
 .brand.footer {
     margin: 12px 0 8px 0;
@@ -65,7 +68,7 @@ table > tbody > tr > td.val {
 
 .actions {
     justify-content: flex-start;
-    padding-bottom: 24px;
+    /* padding-bottom: 24px; */
 }
 
 .user {
@@ -280,8 +283,7 @@ img.remove-circle.clickable {
 }
 
 .tab {
-    /* margin-left: 48px; */
-    color: var(--text-muted);
+    color: white;
     font-size: 36px;
     font-weight: 800;
     border-radius: 12px 12px 0 0;
@@ -289,10 +291,6 @@ img.remove-circle.clickable {
     padding: 4px 48px 12px 48px;
     position: relative;
 
-}
-
-.active-tab {
-    color: white;
 }
 
 .content-wrapper > div > div > div > div:nth-child(n+1):hover {

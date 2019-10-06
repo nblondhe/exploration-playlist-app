@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { URLSearchParams } from '@angular/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from './../environments/environment';
+
+import { SavedTrack } from './savedTrack';
+import { RecommendedTrack } from './recommendedTrack';
+import { SpotifyUser } from './spotifyUser';
 
 @Injectable({
   providedIn: 'root'
@@ -15,62 +18,114 @@ export class SpotifyService {
   constructor(private httpClient: HttpClient) {
   }
 
-  public getUser(token): Observable<any> {
-    const uri = 'me';
-    return this.get(uri, token);
+  public getUser(token): Observable<SpotifyUser> {
+    const endpoint = 'me';
+    return this.httpClient
+    .get<string>(this.spotifyURL + endpoint, {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+    .pipe(
+      map(user => new SpotifyUser(
+        user['id'],
+        user['display_name']
+      )),
+      catchError(this.handleError));
   }
 
-  public getArtistId(artist) {
-    const uri = `search?q=${artist}&type=artist&limit=1`;
+  public getSavedTracks(token: string): Observable<SavedTrack[]> {
+    const endpoint = 'me/tracks?limit=24';
+    return this.httpClient
+      .get<SavedTrack[]>(this.spotifyURL + endpoint, {
+        headers: { Authorization: 'Bearer ' + token }
+      })
+      .pipe(
+        map(tracks => tracks['items'].map(track => new SavedTrack(
+          track['track']['id'],
+          track['track']['artists'],
+          track['track']['name'],
+          track['track']['album']['name'],
+          track['track']['album']['images'][2]['url'],
+          track['track']['album']['images'][0]['url'],
+          new Date(track['track']['album']['release_date']),
+          new Date(track['added_at']),
+          track['track']['album']['id'],
+        ),
+        )),
+        catchError(this.handleError));
   }
 
-  public getSavedTracks(token): Observable<any> {
-    const uri = 'me/tracks?limit=24';
-    return this.get(uri, token);
+  public getRecommendations(id, attributes, token): Observable<RecommendedTrack[]> {
+    const basedOn = attributes[1] + ' - ' + attributes[0][0]['name'];
+    const endpoint = `recommendations?limit=5&market=US&seed_tracks=${id}`;
+    return this.httpClient.get<RecommendedTrack[]>(this.spotifyURL + endpoint, {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+    .pipe(
+      map(tracks => tracks['tracks'].map(track => new RecommendedTrack(
+        track['id'],
+        track['artists'],
+        track['name'],
+        track['album']['name'],
+        track['album']['images'][2]['url'],
+        track['album']['images'][0]['url'],
+        new Date(track['album']['release_date']),
+        basedOn,
+        id,
+      ),
+      )),
+      catchError(this.handleError));
   }
 
-  public getRecommendations(id, token) {
-    const uri = `recommendations?limit=5&market=US&seed_tracks=${id}`;
-    return this.get(uri, token);
-  }
-
-  public createPlaylist(id, token) {
-      const postData = {
+  public createPlaylist(id, token): Observable<string> {
+      const body = {
         name: 'Exploration',
-        description: 'Curated by you. http://exploration-app.netlify.com',
+        description: 'Curated by you. exploration-app.netlify.com',
         public: false
       };
-      const uri = `users/${id}/playlists`;
-      return this.post(uri, token, postData);
+      const endpoint = `users/${id}/playlists`;
+      return this.httpClient
+      .post<string>(this.spotifyURL + endpoint, body, {
+        headers: { Authorization: 'Bearer ' + token }
+      })
+      .pipe(
+        map(result => result['id']),
+        catchError(this.handleError));
   }
 
-  // OLD API????
-  public buildPlaylist(id, playlistId, token, segment) {
-    const postData = {
+  // OLD API?
+  public buildPlaylist(id, playlistId, token, segment): Observable<string> {
+    const body = {
       uris: segment
     };
-    const uri = `users/${id}/playlists/${playlistId}/tracks?`;
-    console.log('build playlist url: ' + uri);
-    return this.post(uri, token, postData);
-  }
-
-  private get(endpoint: string, token: string) {
+    const endpoint = `users/${id}/playlists/${playlistId}/tracks?`;
     return this.httpClient
-      .get(this.spotifyURL + endpoint, {
+      .post<string>(this.spotifyURL + endpoint, body, {
         headers: { Authorization: 'Bearer ' + token }
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        map(result => result['snapshot_id']),
+        catchError(this.handleError));
   }
 
-  private post(endpoint: string, token: string, body) {
-    return this.httpClient
-      .post(this.spotifyURL + endpoint, body, {
-        headers: { Authorization: 'Bearer ' + token }
-      })
-      .pipe(catchError(this.handleError));
-  }
+  // private get(endpoint: string, token: string) {
+  //   return this.httpClient
+  //     .get(this.spotifyURL + endpoint, {
+  //       headers: { Authorization: 'Bearer ' + token }
+  //     })
+  //     .pipe(catchError(this.handleError));
+  // }
+
+
+  // private post(endpoint: string, token: string, body) {
+  //   return this.httpClient
+  //     .post(this.spotifyURL + endpoint, body, {
+  //       headers: { Authorization: 'Bearer ' + token }
+  //     })
+  //     .pipe(catchError(this.handleError));
+  // }
 
   private handleError(error: HttpErrorResponse) {
+    console.log(error);
     let userMessage;
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred.

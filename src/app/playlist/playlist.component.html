@@ -4,12 +4,10 @@
   <div class="lside">
     <div class="top-spacing"></div>
     <div class="actions">
-      <div *ngIf="currentTrack" class="wrapper">
+      <div *ngIf="currentTrack" class="wrapper actionsDetail">
           <img class="album-cover" src="{{ currentTrack.coverHigh }}" />
           <div class="current-track">
             {{currentTrack.track}}
-            <!-- /
-              {{currentTrack.album}} -->
           </div>
           <div class="currentArtists">
     
@@ -42,23 +40,22 @@
       <!-- CURRENT PLAYLIST WINDOW -->
       <div class="content-container playlistWindow">
         <div class="currentPlaylist__spacer"></div>
-        <div *ngIf="currentPlaylist.length == 0" 
-        style="text-align: center; font-size: 14px; font-weight: 100; color: var(--text-muted); 
-        margin:10% 15% 0 15%; line-height: 24px;">
-            Explore saved tracks and recommendations to build your playlist.
-          </div>
+        <div *ngIf="currentPlaylist.length == 0" style="text-align: center; font-size: 14px; font-weight: 100; color: var(--text-muted); 
+              margin:10% 15% 0 15%; line-height: 24px;">
+          Explore saved tracks and recommendations to build your playlist.
+        </div>
         <div *ngFor="let track of currentPlaylist; index as i" class="tracks-list">
           <div class="track-row" (click)="currentTrack = currentPlaylist[i]">
             <img alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg"
               (click)="removeTrack(track, i)" />
-
+      
             <div class="currentPlaylist__trackInfo">
               <div class="track clickable currentPlaylist__detailSpacing">{{ track.track }}</div>
               <div class="artist clickable" *ngFor="let artist of track.artists; index as j">
                 {{ artist.name }}
                 <span *ngIf="
-                  track.artists.length > 1 && j !== track.artists.length - 1
-                  ">,&nbsp;</span>
+                        track.artists.length > 1 && j !== track.artists.length - 1
+                        ">,&nbsp;</span>
               </div>
             </div>
           </div>
@@ -80,7 +77,9 @@
         <span class="username">
           <img alt="Spotify logo" class="spotify-logo" src="../assets/images/Spotify_Icon_RGB_White.png" />
           <a class="link" href="#">
-            {{ spotifyUser }}
+            <span *ngIf="spotifyUser">
+              {{ spotifyUser.displayName }}
+            </span>
           </a>
         </span>
       </div>
@@ -114,7 +113,7 @@
               </div>
 
               <div class="header">
-                <span class="tab" [class.active-tab]="tab == 'savedTracks'" (click)="tab = 'savedTracks'">
+                <span class="tab">
                   Exploration
                 </span>
                 <span class="headerDesc">
@@ -126,14 +125,14 @@
         </div>
       </div>
 
-      <div class="content-container" [ngSwitch]="tab">
-        <div class="content-container" *ngSwitchCase="'savedTracks'">
+      <div class="content-container">
+        <div class="content-container">
           <!-- SAVED TRACKS AND RECOMMENDATIONS -->
           <div *ngFor="let track of savedTracks; index as i; trackBy: trackById" class="tracks-list">
             <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = savedTracks[i]">
-              <img *ngIf="!track.added" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
+              <img *ngIf="!track.addedToPlaylist" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
                 (click)="addTrack(track,'saved', i)" />
-              <img *ngIf="track.added" alt="remove" class="remove-circle clickable"
+              <img *ngIf="track.addedToPlaylist" alt="remove" class="remove-circle clickable"
                 src="../assets/images/remove_circle.svg" (click)="removeTrack(track, i)" />
               <img class="small-cover clickable" src="{{ track.coverLow }}" />
               <div class="track-info">
@@ -161,13 +160,13 @@
             </div>
 
             <div id="panel-{{ i }}" class="collapsed ">
-              <!-- INNER RECOMMENDATION TRACKS -->
+              <!-- RECOMMENDATIONS PANEL -->
               <div *ngFor="let rec of recommendations[track.id]; index as k; trackBy: trackById"
                 [ngClass]="{'collapsed-bottom-inset': k == 4, 'collapsed-top-inset': k == 0}" class="track-row rec-row"
                 (click)="currentTrack = recommendations[track.id][k]">
-                <img *ngIf="!rec.added" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
+                <img *ngIf="!rec.addedToPlaylist" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
                   (click)="addTrack(rec, 'recommended', track.id, k)" />
-                <img *ngIf="rec.added" alt="remove" class="remove-circle clickable"
+                <img *ngIf="rec.addedToPlaylist" alt="remove" class="remove-circle clickable"
                   src="../assets/images/remove_circle.svg" (click)="removeTrack(rec, k)" />
 
                 <img class="small-cover clickable" src="{{ rec.coverLow }}" />
