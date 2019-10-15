@@ -125,33 +125,34 @@ export class PlaylistComponent implements OnInit {
     // });
 
 
-    this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
-      this.savedTracks = savedTracks;
-      this.currentTrack = this.savedTracks[0];
-    },
-      error => {
+      this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
+        this.savedTracks = savedTracks;
+        this.currentTrack = this.savedTracks[0];
+      },
+        error => {
+          if (error) {
+            this.error = error;
+          }
+        },
+        () => {
+          this.savedTracks.forEach(element => {
+            this.getRecommendations(element.id, [element.artists, element.track]);
+          });
+        }
+      );
+    }
+
+    getRecommendations(id: string, attributes: any[]) {
+      this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
+        this.trackRecommendationMap[id] = recommendedTracks;
+      }, error => {
         if (error) {
           this.error = error;
         }
       },
-      () => {
-        this.savedTracks.forEach(element => {
-          this.getRecommendations(element.id, [element.artists, element.track]);
-        });
-      }
+      () => this.recsFetched = true
     );
-  }
 
-  getRecommendations(id: string, attributes: any[]) {
-    this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
-      this.trackRecommendationMap[id] = recommendedTracks;
-    }, error => {
-      if (error) {
-        this.error = error;
-      }
-    },
-    () => this.recsFetched = true
-  );
   }
 
 

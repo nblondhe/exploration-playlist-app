@@ -153,11 +153,13 @@ export class SpotifyService {
     window.location.href = `${this.authURL}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
   }
 
-  public setToken(token_fragment) {
+  public setToken(tokenFragment) {
+    // Remove previous token
     localStorage.removeItem('spotifyToken');
     localStorage.removeItem('timestamp');
 
-    const hash = token_fragment
+    console.log('tokenFragment', tokenFragment);
+    const hash = tokenFragment
       .substring()
       .split('&')
       .reduce(function (initial, item) {
@@ -167,6 +169,7 @@ export class SpotifyService {
         }
         return initial;
       }, {});
+
     window.location.hash = '';
 
     localStorage.setItem('spotifyToken', hash['access_token']);

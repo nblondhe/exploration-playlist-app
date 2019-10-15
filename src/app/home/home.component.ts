@@ -14,27 +14,26 @@ export class HomeComponent implements OnInit {
               private spotifyService: SpotifyService) { }
 
   ngOnInit() {
+    if (this.isValidToken()) {
+      this.logged_in = true;
+    }
     this.activatedRoute.fragment.subscribe(fragment => {
       if (fragment) {
         this.logged_in = this.spotifyService.setToken(fragment);
-      } else {
-        const token = localStorage.getItem('spotifyToken');
-        if (token) {
-          if (!this.isExpired()) {
-            this.logged_in = true;
-          } else {
-            this.spotifyService.login();
-          }
-        }
       }
     });
   }
 
-  isExpired() {
-    const tokenDate = JSON.parse(localStorage.getItem('timestamp'));
-    const now = new Date().getTime().toString();
-    const expired = now > ((1800) + tokenDate);
-    return expired;
+  isValidToken() {
+    const token = localStorage.getItem('spotifyToken');
+    if (token) {
+      const tokenDate = JSON.parse(localStorage.getItem('timestamp'));
+      const now = new Date().getTime().toString();
+      const valid = now > ((3600) + tokenDate);
+      return valid;
+    } else {
+      return false;
+    }
   }
 
 }
