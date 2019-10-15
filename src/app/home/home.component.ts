@@ -9,6 +9,7 @@ import { SpotifyService } from '../spotify.service';
 })
 export class HomeComponent implements OnInit {
   logged_in = false;
+  tokenExpirey = 3600;
 
   constructor(private activatedRoute: ActivatedRoute,
               private spotifyService: SpotifyService) { }
@@ -17,6 +18,8 @@ export class HomeComponent implements OnInit {
     if (this.isValidToken()) {
       this.logged_in = true;
     }
+
+    // If route has been called from Spotify auth redirect
     this.activatedRoute.fragment.subscribe(fragment => {
       if (fragment) {
         this.logged_in = this.spotifyService.setToken(fragment);
@@ -27,9 +30,11 @@ export class HomeComponent implements OnInit {
   isValidToken() {
     const token = localStorage.getItem('spotifyToken');
     if (token) {
-      const tokenDate = JSON.parse(localStorage.getItem('timestamp'));
-      const now = new Date().getTime().toString();
-      const valid = now < ((3600) + tokenDate);
+      const tokenDate = new Date(JSON.parse(localStorage.getItem('timestamp')));
+      const expiredDate = tokenDate.setSeconds(tokenDate.getSeconds() + this.tokenExpirey);
+      const now = new Date().getTime();
+
+      const valid = now < expiredDate;
       return valid;
     } else {
       return false;

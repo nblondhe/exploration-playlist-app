@@ -42,13 +42,12 @@ export class PlaylistComponent implements OnInit {
 
   savedTracks: SavedTrack[];
   trackRecommendationMap: {[id: string]: Array<RecommendedTrack>; } = {};
-  // trackRecommendationMap: Map<string, []>;
   recommendations = {};
 
   constructor(private spotifyService: SpotifyService,
     private jsonService: JsonService) { }
 
-  // Could be mergemap/switchmap or other RXJS operator
+  // TODO Subscribe chain could be refactored to mergemap/switchmap or other RXJS operator
   ngOnInit() {
     this.token = localStorage.getItem('spotifyToken');
     this.spotifyService.getUser(this.token)
@@ -58,7 +57,7 @@ export class PlaylistComponent implements OnInit {
     this.getSavedTracks();
   }
 
-  // When making changes to track collection,
+  // When making changes to ngFor collection,
   // DOM should only re-render the returned id - not all of collection
   trackById(i, id) {
     return id;
@@ -267,6 +266,10 @@ export class PlaylistComponent implements OnInit {
   }
 
   toggleRecommendation(event) {
+    // this.route.fragment.subscribe(f => {
+    //   const element = document.querySelector("#" + f)
+    //   if (element) element.scrollIntoView()
+    // })
     const anchor = event.target.parentNode.parentNode;
     const clickedPanel = anchor.nextElementSibling;
 
@@ -286,6 +289,7 @@ export class PlaylistComponent implements OnInit {
       this.togglePanel(anchor, clickedPanel);
     }
 
+    // clickedPanel.scrollIntoView();
     // const tracksList = anchor.parentNode;
     // const allSavedTracks = anchor.parentNode.parentNode.children;
     // this.muteUnselectedTracks(allSavedTracks, tracksList);

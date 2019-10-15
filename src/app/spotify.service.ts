@@ -158,7 +158,6 @@ export class SpotifyService {
     localStorage.removeItem('spotifyToken');
     localStorage.removeItem('timestamp');
 
-    console.log('tokenFragment', tokenFragment);
     const hash = tokenFragment
       .substring()
       .split('&')

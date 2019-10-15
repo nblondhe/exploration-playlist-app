@@ -25,7 +25,10 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes,
-      { enableTracing: false} // <-- debugging purposes only
+      { enableTracing: false,
+        anchorScrolling: 'enabled',
+        onSameUrlNavigation: 'reload'
+      }
     )
   ],
   providers: [],
