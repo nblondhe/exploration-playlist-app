@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
     if (token) {
       const tokenDate = JSON.parse(localStorage.getItem('timestamp'));
       const now = new Date().getTime().toString();
-      const valid = now > ((3600) + tokenDate);
+      const valid = now < ((3600) + tokenDate);
       return valid;
     } else {
       return false;
