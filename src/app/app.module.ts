@@ -7,9 +7,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AboutComponent } from './about/about.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, data: {animation: 'isLeft'}},
+  { path: 'about', component: AboutComponent, data: {animation: 'isRight'} },
 ];
 
 @NgModule({
@@ -17,7 +19,8 @@ const appRoutes: Routes = [
     AppComponent,
     LandingComponent,
     PlaylistComponent,
-    HomeComponent
+    HomeComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

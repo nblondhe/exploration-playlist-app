@@ -107,23 +107,6 @@ export class SpotifyService {
         catchError(this.handleError));
   }
 
-  // private get(endpoint: string, token: string) {
-  //   return this.httpClient
-  //     .get(this.spotifyURL + endpoint, {
-  //       headers: { Authorization: 'Bearer ' + token }
-  //     })
-  //     .pipe(catchError(this.handleError));
-  // }
-
-
-  // private post(endpoint: string, token: string, body) {
-  //   return this.httpClient
-  //     .post(this.spotifyURL + endpoint, body, {
-  //       headers: { Authorization: 'Bearer ' + token }
-  //     })
-  //     .pipe(catchError(this.handleError));
-  // }
-
   private handleError(error: HttpErrorResponse) {
     console.log(error);
     let userMessage;
