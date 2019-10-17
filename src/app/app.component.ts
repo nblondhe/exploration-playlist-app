@@ -10,6 +10,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
 
+  outlet;
+
   constructor() { }
 
   prepareRoute(outlet: RouterOutlet) {
