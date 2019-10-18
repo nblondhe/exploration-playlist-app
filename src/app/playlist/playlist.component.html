@@ -1,56 +1,52 @@
 <div class="container">
 
   <!-- BEGIN LEFT SIDE -->
-  <div class="lside">
+  <div class="column">
     <div class="top-spacing"></div>
-    <div class="actions">
-      <div *ngIf="currentTrack" class="wrapper actionsDetail">
-          <img class="album-cover" src="{{ currentTrack.coverHigh }}" />
-          <div class="current-track">
-            {{currentTrack.track}}
+    <div class="detail">
+      <div *ngIf="currentTrack" class="flex-wrapper detail--album">
+        <img class="detail--album--cover" src="{{ currentTrack.coverHigh }}" />
+        <div class="detail--currentTrack">
+          {{currentTrack.track}}
+        </div>
+        <div>
+          <div *ngFor="let artist of currentTrack.artists; index as i">
+            {{ artist["name"] }}
           </div>
-          <div class="currentArtists">
-    
-            <div *ngFor="let artist of currentTrack.artists; index as i" class="current-artist">
-              {{ artist["name"] }}
-            </div>
-          </div>
-          <div class="album-detail">
-            <table class="albumDetail">
-              <tr>
-                <td class="attr">Album</td>
-                <td class="val">{{ currentTrack.album }}</td>
-              </tr>
-              <tr>
-                <td class="attr">Released</td>
-                <td class="val">{{currentTrack.release | date : 'longDate'}}</td>
-              </tr>
-              <tr *ngIf="currentTrack.addedOn">
-                <td class="attr">Added on</td>
-                <td class="val">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</td>
-              </tr>
-              <tr *ngIf="currentTrack.basedOn">
-                <td class="attr">Similar to</td>
-                <td class="val">{{currentTrack.basedOn}}</td>
-              </tr>
-            </table>
-          </div>
+        </div>
+          <table>
+            <tr>
+              <td class="attribute">Album</td>
+              <td class="value">{{ currentTrack.album }}</td>
+            </tr>
+            <tr>
+              <td class="attribute">Released</td>
+              <td class="value">{{currentTrack.release | date : 'longDate'}}</td>
+            </tr>
+            <tr *ngIf="currentTrack.addedOn">
+              <td class="attribute">Added on</td>
+              <td class="value">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</td>
+            </tr>
+            <tr *ngIf="currentTrack.basedOn">
+              <td class="attribute">Similar to</td>
+              <td class="value">{{currentTrack.basedOn}}</td>
+            </tr>
+          </table>
       </div>
 
       <!-- CURRENT PLAYLIST WINDOW -->
-      <div class="content-container playlistWindow">
-        <div class="currentPlaylist__spacer"></div>
-        <div *ngIf="currentPlaylist.length == 0" style="text-align: center; font-size: 14px; font-weight: 100; color: var(--text-muted); 
-              margin:10% 15% 0 15%; line-height: 24px;">
+      <div class="playlist flex-container">
+        <div class="playlist--trackSpacer"></div>
+        <div *ngIf="currentPlaylist.length == 0" class="playlist--empty">
           Explore saved tracks and recommendations to build your playlist.
         </div>
-        <div *ngFor="let track of currentPlaylist; index as i" class="tracks-list">
+        <div *ngFor="let track of currentPlaylist; index as i" class="playlist--track">
           <div class="track-row" (click)="currentTrack = currentPlaylist[i]">
             <img alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg"
               (click)="removeTrack(track, i)" />
       
-            <div class="currentPlaylist__trackInfo">
-              <div class="track clickable currentPlaylist__detailSpacing">{{ track.track }}</div>
+            <div class="playlist--track--detail">
+              <div class="track clickable ">{{ track.track }}</div>
               <div class="artist clickable" *ngFor="let artist of track.artists; index as j">
                 {{ artist.name }}
                 <span *ngIf="
@@ -60,23 +56,24 @@
             </div>
           </div>
         </div>
-        <div class="currentPlaylist__spacer"></div>
+        <div class="playlist--trackSpacer"></div>
       </div>
       <!-- END CURRENT PLAYLIST WINDOW -->
 
-      <div class="wrapper playlist-actions">
+      <div class="flex-wrapper playlist-actions">
         <a class="button button-med outlined" (click)="clearPlaylist();">Clear Playlist</a>
         <a class="button button-med" (click)="createPlaylist();">Create Playlist</a>
       </div>
     </div>
+
     <footer>
       <div class="user">
         <span>
           Signed in as
         </span>
-        <span class="username">
-          <img alt="Spotify logo" class="spotify-logo" src="../assets/images/Spotify_Icon_RGB_White.png" />
-          <a class="link" href="#">
+        <span class="user--name">
+          <img alt="Spotify logo" class="user--name--logo" src="../assets/images/Spotify_Icon_RGB_White.png" />
+          <a class="link" href="https://www.spotify.com">
             <span *ngIf="spotifyUser">
               {{ spotifyUser.displayName }}
             </span>
@@ -86,10 +83,10 @@
     </footer>
     <aside [@fadeAnimation]="{value: animationState, params:
           { fadeIn: 350, fadeOut: 350 }}" (@fadeAnimation.done)="onFadeFinished($event)"
-      *ngFor="let notif of notifications" class="notificationContainer">
-      <div class="notification" *ngIf="!notif.dismissed" 
+      *ngFor="let notif of notifications" class="notification">
+      <div class="notification--message" *ngIf="!notif.dismissed" 
       [ngClass]="{'notifError': notif.style=='error', 'notifSuccess': notif.style=='success'}">
-        <div class="notification__content">{{notif.content}}</div>
+        <div class="notification--message--content">{{notif.content}}</div>
         <button class="button button-med outlined dismiss" (click)="closeNotification(notif)">Close</button>
       </div>
     </aside>
@@ -97,36 +94,30 @@
   <!-- END LEFT SIDE -->
 
   <!-- BEGIN RIGHT SIDE -->
-  <div class="rside">
+  <div class="column-tracks">
     <div *ngIf="savedTracks" class="content-wrapper">
 
-      <div id="tabHeader" class="tabContainer">
-        <div class="tabHeader">
-          <div id="border" class="border">
-            <section>
-              <div class="headerLinks">
+          <div id="appHeader" class="appHeader">
+              <div class="appHeader--links">
                 <div class="links about">
                   <a class="link" routerLink="/about" routerLinkActive="active">About</a>
-                  <div class="vr"></div>
+                  <div class="vertical"></div>
                   <a class="link" href="https://github.com/nblondhe/exploration-playlist-app">Github</a>
                 </div>
               </div>
-
-              <div class="header">
-                <span class="tab">
+              
+              <div class="appHeader--title">
+                <span class="appHeader--title--text">
                   Exploration
                 </span>
-                <span class="headerDesc">
+                <span class="appHeader--title--sub">
                   Saved Tracks and Recommendations
                 </span>
               </div>
-            </section>
-          </div>
-        </div>
-      </div>
+            </div>
 
-      <div class="content-container">
-        <div class="content-container">
+      <div class="flex-container">
+        <div class="flex-container">
           <!-- SAVED TRACKS AND RECOMMENDATIONS -->
           <div *ngFor="let track of savedTracks; index as i; trackBy: trackById" class="tracks-list">
             <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = savedTracks[i]">
@@ -147,8 +138,7 @@
                 </div>
               </div>
               <div *ngIf="hasRecommendations(track.id)" class="track-actions">
-                <a class="button similar raised-white" style="padding-right: 48px;"
-                  (click)="toggleRecommendation($event, i)">
+                <a class="button similar raised-white" style="padding-right: 48px;" (click)="toggleRecommendation($event, i)">
                   Recommended Tracks
                 </a>
                 <img alt="expand" (click)="toggleRecommendation($event, i)" class="expand lg-screen clickable"
@@ -158,7 +148,7 @@
                   src="../assets/images/expand_more.svg" />
               </div>
             </div>
-
+      
             <div id="panel-{{ i }}" class="collapsed ">
               <!-- RECOMMENDATIONS PANEL -->
               <div *ngFor="let rec of trackRecommendationMap[track.id]; index as k; trackBy: trackById"
@@ -168,7 +158,7 @@
                   (click)="addTrack(rec, 'recommended', track.id, k)" />
                 <img *ngIf="rec.addedToPlaylist" alt="remove" class="remove-circle clickable"
                   src="../assets/images/remove_circle.svg" (click)="removeTrack(rec, k)" />
-
+      
                 <img class="small-cover clickable" src="{{ rec.coverLow }}" />
                 <div>
                   <div class="track clickable track-spacing"> {{ rec.track }}</div>
@@ -185,10 +175,9 @@
             </div>
           </div>
         </div>
-
+      
+      
       </div>
-
-    </div>
-  </div>
-
-</div>
+      </div>
+      
+      </div>

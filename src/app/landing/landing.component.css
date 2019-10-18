@@ -1,0 +1,10 @@
+.landing {
+    flex-direction: column;
+    max-width: 475px;
+    display: flex;
+    align-items: center;
+}
+
+.actions.landing {
+    width: unset;
+}

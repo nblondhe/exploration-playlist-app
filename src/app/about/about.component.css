@@ -2,3 +2,48 @@
     font-size: 30px;
     font-weight: 800;
 }
+
+.collage--brand {
+    position: absolute;
+    bottom: 0;
+    margin: 0 0 5% 5%;
+}
+
+.collage--about {
+    position: absolute;
+    top: 10%;
+    right: 15%;
+    max-width: 524px;
+    font-size: 20px;
+}
+
+.collage__link {
+    font-size: 16px;
+}
+
+.container.about {
+    background-image: url("../../assets/images/collage77-all.jpg");
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    color: #FFF;
+    display: block;
+    background: rgba(125, 128, 218, .9);
+}
+
+.collage {
+    flex: 3;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}

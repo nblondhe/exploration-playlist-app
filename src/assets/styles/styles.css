@@ -20,7 +20,6 @@ html {
     overflow-x: hidden;
 }
 
-
 .flex-space {
     flex: 1;
 }
@@ -33,7 +32,6 @@ html {
     display: flex;
     flex-direction: row;
     flex-flow: row wrap;
-    /* background-image: url("../images/104.png"); */
     background-size: cover;
     justify-content: center;
     background: #877397;
@@ -41,8 +39,6 @@ html {
     background: -moz-linear-gradient(top left, #877397, #2C2E81);
     background: linear-gradient(to bottom right, #877397, #2C2E81);
 }
-
-
 
 a, a:visited, a:hover {
     text-decoration: none;
@@ -146,10 +142,7 @@ a, a:visited, a:hover {
     pointer-events: none;
 }
 
-/*  */
-/*  */
-/*  LEFT SIDE */
-.lside {
+.column {
     flex: 3;
     position: sticky;
     top: 0;
@@ -161,11 +154,6 @@ a, a:visited, a:hover {
     max-width: 35%;
 }
 
-.space {
-    flex: 1;
-    min-height: 48px;
-}
-
 .actions {
     width: 100%;
     display: flex;
@@ -175,22 +163,8 @@ a, a:visited, a:hover {
     justify-content: center;
 }
 
-.landing {
-    flex-direction: column;
-    max-width: 475px;
-    display: flex;
-    align-items: center;
-}
 
-.actions.landing {
-    width: unset;
-}
-
-/* .actions.about {
-    flex: 10;
-} */
-
-.wrapper {
+.flex-wrapper {
     flex-direction: column;
     width: 100%;
     max-width: 475px;
@@ -199,27 +173,24 @@ a, a:visited, a:hover {
 }
 
 
-
-.wrapper > a {
+.flex-wrapper > a {
     width: 50%;
     margin-bottom: 16px;
 }
 
-.logo {
+.title {
     max-width: 100%;
     margin: 0 12px;
 }
 
 
-.brand {
+.title--text {
     font-weight: 800;
     font-size: 90px;
     margin: 0 0 64px 0;
 }
 
-
-
-.vr {
+.vertical {
     margin: 20px 24px 0 24px;
     border-left: 1px solid white;
     height: 30px;
@@ -235,116 +206,10 @@ footer {
     padding: 8px 24px 0 24px;
     margin-bottom: 64px;
 }
-/* END LEFT SIDE */
-/*  */
-/*  */
-.album-cover.collage {
-    width: 100%;
-}
 
-.album-cover {
-    width: 75%;
-    min-width: 275px;
-    margin: 12px 32px;
-    border-radius: 24px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-}
-
-.overlayFade {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-.overlayFade .fade {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
-    color: #FFF;
-    display: block;
-    background: rgba(125, 128, 218, .9);
-}
-
-.collage {
-    flex: 3;
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
-.collage__brand {
-    position: absolute;
-    bottom: 0;
-    margin: 0 0 5% 5%;
-}
-
-.collage__about {
-    position: absolute;
-    top: 10%;
-    right: 15%;
-    max-width: 524px;
-    font-size: 20px;
-}
-
-a.collage__link {
-    font-size: 16px;
-}
-
-.container-about {
-    display: flex;
-    flex-direction: row;
-    flex-flow: row wrap;
-    background-image: url("../images/collage77-all.jpg");
-    background-size: cover;
-    justify-content: center;
-}
-
-/*  */
-/*  */
-/* RIGHT SIDE */
-.content-wrapper {
-    flex: 4;
-    flex-direction: column;
-    /* commented for sticky header */
-    /* overflow: auto; */
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.rside {
-    flex: 6;
-    display: flex;
-    flex-direction: column;
-    min-width: 572px;
-    max-width: 50%;
-
-}
-
-.speak-wrapper {
-    z-index: 1;
-}
-
-.message {
-    width: 100%;
-    font-size: 48px;
-    margin-bottom: 24px;
-    font-weight: 800;
-}
-/*END  RIGHT SIDE */
-/*  */
-/*  */
 
 @media only screen and (max-width : 1024px) {
-    .brand {
+    .title--text {
         font-weight: 800;
         font-size: 50px;
         margin: 0 0 64px 0;
@@ -353,7 +218,7 @@ a.collage__link {
 }
 
 @media only screen and (max-width : 932px) {
-    .lside {
+    .column {
         position: unset;
     }
 
@@ -363,8 +228,8 @@ a.collage__link {
 
 }
 
-@media only screen and (max-width : 684px) {
-    .lside {
+/* @media only screen and (max-width : 684px) {
+    .column {
         position: unset;
     }
 
@@ -372,9 +237,7 @@ a.collage__link {
         width: 100%;
     }
     
-    /*  show expand icon, hide button */
-
-    .rside {
+    .playlistColumn {
         min-width: unset;
     }
 
@@ -382,4 +245,4 @@ a.collage__link {
         width: unset !important;
     }
 
-}
+} */

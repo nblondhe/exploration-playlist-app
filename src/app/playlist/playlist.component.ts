@@ -71,86 +71,84 @@ export class PlaylistComponent implements OnInit {
     }
   }
 
+
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(e) {
     if (window.pageYOffset > 0) {
-      const element = document.getElementById('tabHeader');
+      const element = document.getElementById('appHeader');
       element.style.background = '#63adf2';
-      const border = document.getElementById('border');
-      border.style.boxShadow = '-13px 12px 24px -20px #000';
+      element.style.boxShadow = '-13px 12px 24px -20px #000';
     } else {
-      const element = document.getElementById('tabHeader');
-      const border = document.getElementById('border');
+      const element = document.getElementById('appHeader');
       element.style.background = 'unset';
-      border.style.boxShadow = 'unset';
+      element.style.boxShadow = 'unset';
     }
   }
 
   getSavedTracks() {
     // Temp JSON data
-    // this.jsonService.getSavedTracks().subscribe(data => {
-    //   this.savedTracks = data['items'].map(track => (
-    //     {
-    //       artists: track['track']['artists'],
-    //       track: track['track']['name'],
-    //       album: track['track']['album']['name'],
-    //       coverLow: track['track']['album']['images'][2]['url'],
-    //       coverHigh: track['track']['album']['images'][0]['url'],
-    //       id: track['track']['id'],
-    //       release: new Date(track['track']['album']['release_date']),
-    //       addedOn: new Date(track['added_at']),
-    //       albumId: track['track']['album']['id'],
+    this.jsonService.getSavedTracks().subscribe(data => {
+      this.savedTracks = data['items'].map(track => (
+        {
+          artists: track['track']['artists'],
+          track: track['track']['name'],
+          album: track['track']['album']['name'],
+          coverLow: track['track']['album']['images'][2]['url'],
+          coverHigh: track['track']['album']['images'][0]['url'],
+          id: track['track']['id'],
+          release: new Date(track['track']['album']['release_date']),
+          addedOn: new Date(track['added_at']),
+          albumId: track['track']['album']['id'],
+        }
+      ));
+      this.currentTrack = this.savedTracks[0];
+      this.jsonService.getRecs().subscribe(recs => {
+
+        this.savedTracks.forEach(element => {
+          this.trackRecommendationMap[element.id] = recs['tracks'].map(track => (
+            {
+              artists: track['artists'],
+              track: track['name'],
+              album: track['album']['name'],
+              coverLow: track['album']['images'][2]['url'],
+              coverHigh: track['album']['images'][0]['url'],
+              release: new Date(track['album']['release_date']),
+              seedId: element.id,
+              id: track['id']
+            }
+          ));
+        });
+      });
+
+    });
+
+    //   this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
+    //     this.savedTracks = savedTracks;
+    //     this.currentTrack = this.savedTracks[0];
+    //   },
+    //     error => {
+    //       if (error) {
+    //         this.error = error;
+    //       }
+    //     },
+    //     () => {
+    //       this.savedTracks.forEach(element => {
+    //         this.getRecommendations(element.id, [element.artists, element.track]);
+    //       });
     //     }
-    //   ));
-    //   this.currentTrack = this.savedTracks[0];
-    //   this.jsonService.getRecs().subscribe(recs => {
+    //   );
+    // }
 
-    //     this.savedTracks.forEach(element => {
-    //       this.trackRecommendationMap[element.id] = recs['tracks'].map(track => (
-    //         {
-    //           artists: track['artists'],
-    //           track: track['name'],
-    //           album: track['album']['name'],
-    //           coverLow: track['album']['images'][2]['url'],
-    //           coverHigh: track['album']['images'][0]['url'],
-    //           release: new Date(track['album']['release_date']),
-    //           seedId: element.id,
-    //           id: track['id']
-    //         }
-    //       ));
-    //     });
-    //   });
-
-    // });
-
-
-      this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
-        this.savedTracks = savedTracks;
-        this.currentTrack = this.savedTracks[0];
-      },
-        error => {
-          if (error) {
-            this.error = error;
-          }
-        },
-        () => {
-          this.savedTracks.forEach(element => {
-            this.getRecommendations(element.id, [element.artists, element.track]);
-          });
-        }
-      );
-    }
-
-    getRecommendations(id: string, attributes: any[]) {
-      this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
-        this.trackRecommendationMap[id] = recommendedTracks;
-      }, error => {
-        if (error) {
-          this.error = error;
-        }
-      },
-      () => this.recsFetched = true
-    );
+    // getRecommendations(id: string, attributes: any[]) {
+    //   this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
+    //     this.trackRecommendationMap[id] = recommendedTracks;
+    //   }, error => {
+    //     if (error) {
+    //       this.error = error;
+    //     }
+    //   },
+    //   () => this.recsFetched = true
+    // );
 
   }
 

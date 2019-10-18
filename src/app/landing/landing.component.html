@@ -1,22 +1,24 @@
 <div class="container">
-  <div class="lside">
-    <div class="space"></div>
+  <div class="column">
+    <div class="flex-space"></div>
+
     <div class="actions landing">
-    <div class="wrapper">
-      <div class="logo">
-        <h1 class="brand">Exploration</h1>
+      <div class="flex-wrapper">
+        <div class="title">
+          <h1 class="title--text">Exploration</h1>
+        </div>
+        <a class="button button-med" (click)="signIn();">Sign in with Spotify</a>
+        <a class="button button-med raised-white" href="https://www.spotify.com/us/">Get Spotify</a>
       </div>
-      <a class="button button-med" (click)="signIn();">Sign in with Spotify</a>
-      <a class="button button-med raised-white" href="https://www.spotify.com/us/">Get Spotify</a>
     </div>
+
+    <div class="links">
+      <a class="link" routerLink="/about" routerLinkActive="active">About</a>
+      <div class="vertical"></div>
+      <a class="link" href="https://github.com/nblondhe/exploration-playlist-app">Github</a>
+    </div>
+    <footer>
+      Copyright &copy; 2019 ExplorationBuilder
+    </footer>
   </div>
-  <div class="links">
-    <a class="link" routerLink="/about" routerLinkActive="active">About</a>
-    <div class="vr"></div>
-    <a class="link" href="https://github.com/nblondhe/exploration-playlist-app">Github</a>
-  </div>
-  <footer>
-    Copyright &copy; 2019 ExplorationBuilder
-  </footer>
-</div>
 </div>
