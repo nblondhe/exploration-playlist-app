@@ -23,10 +23,10 @@ const navRight = [
     ]),
     group([
       query(':leave', [
-        animate('600ms ease', style({ right: '100%', }))
+        animate('500ms ease', style({ right: '100%', }))
       ], optional),
       query(':enter', [
-        animate('600ms ease', style({ right: '0%'}))
+        animate('500ms ease', style({ right: '0%'}))
       ])
     ]),
   ];
@@ -44,18 +44,18 @@ const navRight = [
     ]),
     group([
       query(':leave', [
-        animate('600ms ease', style({ left: '100%', }))
+        animate('500ms ease', style({ left: '100%', }))
       ], optional),
       query(':enter', [
-        animate('600ms ease', style({ left: '0%'}))
+        animate('500ms ease', style({ left: '0%'}))
       ])
     ]),
   ];
 
   export const slider =
   trigger('routeAnimations', [
-    transition('* => isLeft', navLeft ),
-    transition('* => isRight', navRight ),
-    transition('isRight => *', navLeft ),
-    transition('isLeft => *', navRight )
+    transition('* => Home', navLeft ),
+    transition('* => About', navRight ),
+    transition('About => *', navLeft ),
+    transition('Home => *', navRight )
   ]);

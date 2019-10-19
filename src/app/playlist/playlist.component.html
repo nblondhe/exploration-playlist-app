@@ -1,6 +1,6 @@
 <div class="container">
 
-  <!-- BEGIN LEFT SIDE -->
+<!-- BEGIN LEFT SIDE -->
   <div class="column">
     <div class="top-spacing"></div>
     <div class="detail">
@@ -34,7 +34,7 @@
           </table>
       </div>
 
-      <!-- CURRENT PLAYLIST WINDOW -->
+<!-- CURRENT PLAYLIST WINDOW -->
       <div class="playlist flex-container">
         <div class="playlist--trackSpacer"></div>
         <div *ngIf="currentPlaylist.length == 0" class="playlist--empty">
@@ -58,7 +58,7 @@
         </div>
         <div class="playlist--trackSpacer"></div>
       </div>
-      <!-- END CURRENT PLAYLIST WINDOW -->
+<!-- END CURRENT PLAYLIST WINDOW -->
 
       <div class="flex-wrapper playlist-actions">
         <a class="button button-med outlined" (click)="clearPlaylist();">Clear Playlist</a>
@@ -91,11 +91,13 @@
       </div>
     </aside>
   </div>
-  <!-- END LEFT SIDE -->
+<!-- END LEFT SIDE -->
 
-  <!-- BEGIN RIGHT SIDE -->
+<!-- BEGIN RIGHT SIDE -->
+
+<!-- APP HEADER -->
   <div class="column-tracks">
-    <div *ngIf="savedTracks" class="content-wrapper">
+    <div *ngIf="savedTracks" class="tracks-wrapper">
 
           <div id="appHeader" class="appHeader">
               <div class="appHeader--links">
@@ -116,9 +118,10 @@
               </div>
             </div>
 
-      <div class="flex-container">
+<!-- SAVED TRACKS AND RECOMMENDATIONS -->
         <div class="flex-container">
-          <!-- SAVED TRACKS AND RECOMMENDATIONS -->
+        
+        
           <div *ngFor="let track of savedTracks; index as i; trackBy: trackById" class="tracks-list">
             <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = savedTracks[i]">
               <img *ngIf="!track.addedToPlaylist" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
@@ -143,14 +146,12 @@
                 </a>
                 <img alt="expand" (click)="toggleRecommendation($event, i)" class="expand lg-screen clickable"
                   src="../assets/images/expand_more_secondary.svg" />
-                <!-- show on mobile, hide button -->
                 <img alt="expand" (click)="toggleRecommendation($event, i)" class="sm-screen clickable"
                   src="../assets/images/expand_more.svg" />
               </div>
             </div>
-      
+        
             <div id="panel-{{ i }}" class="collapsed ">
-              <!-- RECOMMENDATIONS PANEL -->
               <div *ngFor="let rec of trackRecommendationMap[track.id]; index as k; trackBy: trackById"
                 [ngClass]="{'collapsed-bottom-inset': k == 4, 'collapsed-top-inset': k == 0}" class="track-row rec-row"
                 (click)="currentTrack = trackRecommendationMap[track.id][k]">
@@ -158,7 +159,7 @@
                   (click)="addTrack(rec, 'recommended', track.id, k)" />
                 <img *ngIf="rec.addedToPlaylist" alt="remove" class="remove-circle clickable"
                   src="../assets/images/remove_circle.svg" (click)="removeTrack(rec, k)" />
-      
+        
                 <img class="small-cover clickable" src="{{ rec.coverLow }}" />
                 <div>
                   <div class="track clickable track-spacing"> {{ rec.track }}</div>
@@ -174,10 +175,9 @@
               </div>
             </div>
           </div>
+        
+        
         </div>
-      
-      
-      </div>
-      </div>
-      
-      </div>
+
+  </div>
+</div>

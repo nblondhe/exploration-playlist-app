@@ -10,8 +10,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AboutComponent } from './about/about.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, data: {animation: 'isLeft'}},
-  { path: 'about', component: AboutComponent, data: {animation: 'isRight'} },
+  { path: '', component: HomeComponent, data: {animation: 'Home'}},
+  { path: 'about', component: AboutComponent, data: {animation: 'About'} },
 ];
 
 @NgModule({

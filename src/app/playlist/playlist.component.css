@@ -47,7 +47,7 @@ table > tbody > tr > td.value {
 .flex-wrapper.playlist-actions {
     flex-direction: row;
     justify-content: center;
-    margin-top: 42px;
+    margin-top: 16px;
     width: 70%;
 }
 
@@ -104,6 +104,7 @@ table > tbody > tr > td.value {
 
 .user {
     position: relative;
+    margin-bottom: 20px;
 }
 
 .user > span:first-child {
@@ -125,7 +126,7 @@ table > tbody > tr > td.value {
 
 
 /*  PLAYLIST HEADERS */
-.content-wrapper {
+.tracks-wrapper {
     padding-top: 32px;
     justify-content: flex-start;
     align-self: center;
@@ -280,12 +281,11 @@ img.remove-circle.clickable {
     font-size: 14px;
 }
 
-.vr {
+.vertical {
     margin: 20px 18px 0 18px;
     border-left: 1px solid white;
     height: 12px;
 }
-
 
 .saved-sub-header {
     background: var(--tab); 
@@ -316,7 +316,7 @@ img.remove-circle.clickable {
 }
 
 
-.content-wrapper > div > div > div > div:nth-child(n+1):hover {
+.tracks-list:hover {
     background: var(--accent);
 }
 /*  END PLAYLIST HEADERS */
@@ -324,11 +324,7 @@ img.remove-circle.clickable {
 
 /*  TRACK ROW */
 
-/* hmmmmmm */
-/* .playlist--track {
-    width: 100%;
-    margin-right: auto;
-} */
+
 .track-row {
     width: 100%;
     margin-right: auto;
@@ -437,20 +433,6 @@ img.remove-circle.clickable {
     align-self: center;
     animation: .75s fadeIn;
     animation-fill-mode: forwards;
-}
-
-div.add-all {
-    flex: .25;
-    position: relative;
-}
-
-div.add-all > .add {
-    position: absolute;
-    top: -4px;
-    left: -64px;
-    visibility: visible;
-    height: 25px;
-    align-self: center;
 }
 /*  END TRACK ROW */
 
@@ -586,7 +568,7 @@ div.add-all > .add {
         min-width: unset;
     }
 
-    .content-wrapper {
+    .tracks-wrapper {
         width: unset !important;
     }
 }

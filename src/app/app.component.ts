@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { slider } from './animations';
 import { RouterOutlet } from '@angular/router';
 
