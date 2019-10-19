@@ -40,17 +40,17 @@
         <div *ngIf="currentPlaylist.length == 0" class="playlist--empty">
           Explore saved tracks and recommendations to build your playlist.
         </div>
-        <div *ngFor="let track of currentPlaylist; index as i" class="playlist--track">
-          <div class="track-row" (click)="currentTrack = currentPlaylist[i]">
+        <div *ngFor="let playlistTrack of currentPlaylist; index as i" class="playlist--track">
+          <div class="track-row" (click)="currentTrack = currentPlaylist[i].track">
             <img alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg"
-              (click)="removeTrack(track, i)" />
+              (click)="OnRemove(playlistTrack.track, playlistTrack.component)" />
       
             <div class="playlist--track--detail">
-              <div class="track clickable ">{{ track.track }}</div>
-              <div class="artist clickable" *ngFor="let artist of track.artists; index as j">
+              <div class="track clickable ">{{ playlistTrack.track.track }}</div>
+              <div class="artist clickable" *ngFor="let artist of playlistTrack.track.artists; index as j">
                 {{ artist.name }}
                 <span *ngIf="
-                        track.artists.length > 1 && j !== track.artists.length - 1
+                        playlistTrack.track.artists.length > 1 && j !== playlistTrack.track.artists.length - 1
                         ">,&nbsp;</span>
               </div>
             </div>
@@ -123,7 +123,13 @@
         
         
           <div *ngFor="let track of savedTracks; index as i; trackBy: trackById" class="tracks-list">
-            <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = savedTracks[i]">
+            <app-saved-track [savedTrack]="track" 
+                    (current)="OnSelected($event)"
+                    (playlistAdd)="OnAdd($event)"
+                    (playlistRemove)="OnRemove($event)"
+                    >
+            </app-saved-track>
+            <!-- <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = savedTracks[i]">
               <img *ngIf="!track.addedToPlaylist" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
                 (click)="addTrack(track,'saved', i)" />
               <img *ngIf="track.addedToPlaylist" alt="remove" class="remove-circle clickable"
@@ -149,9 +155,9 @@
                 <img alt="expand" (click)="toggleRecommendation($event, i)" class="sm-screen clickable"
                   src="../assets/images/expand_more.svg" />
               </div>
-            </div>
+            </div> -->
         
-            <div id="panel-{{ i }}" class="collapsed ">
+            <!-- <div id="panel-{{ i }}" class="collapsed ">
               <div *ngFor="let rec of trackRecommendationMap[track.id]; index as k; trackBy: trackById"
                 [ngClass]="{'collapsed-bottom-inset': k == 4, 'collapsed-top-inset': k == 0}" class="track-row rec-row"
                 (click)="currentTrack = trackRecommendationMap[track.id][k]">
@@ -173,7 +179,7 @@
                 <div class="track-actions">
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         
         

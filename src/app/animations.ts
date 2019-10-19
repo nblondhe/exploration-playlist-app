@@ -5,10 +5,13 @@ import {
     query,
     group,
     animate,
+    AnimationTriggerMetadata,
+    state,
   } from '@angular/animations';
 
 const optional = { optional: true };
 
+// Router Animation
 const navRight = [
     query(':enter, :leave', [
       style({
@@ -59,3 +62,20 @@ const navRight = [
     transition('About => *', navLeft ),
     transition('Home => *', navRight )
   ]);
+
+
+// Notifications animation
+export const notificationAnimations: {
+    readonly fadeNotif: AnimationTriggerMetadata;
+    } = {
+    fadeNotif: trigger('fadeAnimation', [
+        state('in', style({ opacity: 1 })),
+        transition('void => *', [style({ opacity: 0 }), animate('{{ fadeIn }}ms')]),
+        transition(
+            'default => closing',
+            animate('{{ fadeOut }}ms', style({ opacity: 0 })),
+        ),
+    ]),
+};
+
+export type NotifAnimationState = 'default' | 'closing';

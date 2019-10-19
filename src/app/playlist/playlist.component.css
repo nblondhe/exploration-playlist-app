@@ -287,35 +287,6 @@ img.remove-circle.clickable {
     height: 12px;
 }
 
-.saved-sub-header {
-    background: var(--tab); 
-    margin-right: auto; 
-    width: 100%;
-
-    display: flex;
-    justify-content: center;
-}
-
-.instruction {
-    max-width: 60%;
-    margin: 24px 24px;
-    font-size: 13px;
-    color: var(--text-muted);
-}
-
-.saved-tab-icon {
-    position: absolute;
-    left: 124px;
-    top: 2px;
-}
-
-.playlist-tab-icon {
-    position: absolute;
-    left: 124px;
-    top: 2px;
-}
-
-
 .tracks-list:hover {
     background: var(--accent);
 }
@@ -323,9 +294,7 @@ img.remove-circle.clickable {
 
 
 /*  TRACK ROW */
-
-
-.track-row {
+/* .track-row {
     width: 100%;
     margin-right: auto;
 }
@@ -418,7 +387,6 @@ img.remove-circle.clickable {
     }
   }
 
-/* Add active to these classes so no animation on list loading */
 .add {
     margin-left: 32px;
     height: 27px;
@@ -433,8 +401,8 @@ img.remove-circle.clickable {
     align-self: center;
     animation: .75s fadeIn;
     animation-fill-mode: forwards;
-}
-/*  END TRACK ROW */
+} */
+ /* END TRACK ROW */
 
 
 /*  COLLAPSED AND RECOMMENDATION ROW */

@@ -1,0 +1,119 @@
+.track-row.action-header {
+    color: var(--text);
+    border: none;
+    background: var(--tab);
+    padding: 48px 0 24px;
+    flex-wrap: wrap;
+}
+
+/*  TRACK ROW */
+.track-row {
+    width: 100%;
+    margin-right: auto;
+}
+
+.track-row:hover > .remove,
+.track-row:hover > .add,
+.track-row:hover > .remove-circle,
+.track-row:hover > .track-actions > .similar,
+.track-row:hover > .track-actions > .expand {
+    visibility: visible;
+}
+
+.track-row.collapsible-parent.highlighted > .track-actions > .similar,
+.track-row.collapsible-parent.highlighted > .track-actions > .expand,
+.track-row.collapsible-parent.highlighted > .add {
+    visibility: visible;
+}
+
+.track-row {
+    font-family: 'Lato', sans-serif;
+    color: var(--text);
+    width: 100%;
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    padding: 18px 0px;
+}
+
+.small-cover {
+    display: flex;
+    border-radius: 5px;
+    min-width: 64px;
+    margin-right: 12px;
+    margin-left: 32px;
+}
+
+.track-spacing {
+    margin-top: 4px;
+}
+
+.track-info {
+    margin-right: 12px;
+    max-width: 164px;
+}
+
+.track, .artist {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: left;
+}
+
+.artist {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.track-actions {
+    margin-left: auto;
+    align-self:center;
+    position: relative;
+}
+
+.similar {
+    visibility: hidden;
+    padding: 4px 64px 4px 12px;
+    margin-right: 32px;
+}
+
+.expand {
+    position: absolute;
+    visibility: hidden;
+    left: 165px;
+    top: 2px;
+}
+
+.expand.sub-track {
+    visibility: hidden;
+}
+
+@keyframes fadeIn {
+    0% {
+        transform: rotate(0);
+        opacity: 0;
+    }
+    100% {
+        visibility: visible;
+        transform: rotate(180);
+        opacity: 1;
+    }
+  }
+
+/* Add active to these classes so no animation on list loading */
+.add {
+    margin-left: 32px;
+    height: 27px;
+    align-self: center;
+    animation: .75s fadeIn;
+    animation-fill-mode: forwards;
+}
+
+.remove-circle {
+    margin-left: 32px;
+    height: 27px;
+    align-self: center;
+    animation: .75s fadeIn;
+    animation-fill-mode: forwards;
+}
+/*  END TRACK ROW */

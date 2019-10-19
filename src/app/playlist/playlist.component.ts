@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, Directive, Input, ElementRef } from '@angular/core';
 import { SpotifyService } from '../spotify.service';
 import { JsonService } from '../json.service';
-import { notificationAnimations, NotifAnimationState } from './notification-animations';
+import { notificationAnimations, NotifAnimationState } from '../animations';
 import { SavedTrack } from '../savedTrack';
 import { SpotifyUser } from '../spotifyUser';
 import { Track } from '../track';
 import { RecommendedTrack } from '../recommendedTrack';
+import { SavedTrackComponent } from './saved-track/saved-track.component';
 
 export class Notification {
   content: string;
@@ -27,7 +28,6 @@ export class Notification {
 export class PlaylistComponent implements OnInit {
   private token: string;
   error: string;
-  @ViewChild('collapseAnchor') collapseAnchor;
   spotifyUser: SpotifyUser;
   currentPlaylist = [];
   trackIds = [];
@@ -37,7 +37,8 @@ export class PlaylistComponent implements OnInit {
   activePanelId: string;
   activePanel = {};
   animationState: NotifAnimationState = 'default';
-
+  @ViewChild('collapseAnchor') collapseAnchor: ElementRef;
+  @ViewChild('trackRow') trackRowRef: ElementRef;
   recsFetched: boolean;
 
   savedTracks: SavedTrack[];
@@ -63,103 +64,88 @@ export class PlaylistComponent implements OnInit {
     this.getSavedTracks();
   }
 
-  hasRecommendations(trackId: string): boolean {
-    if (this.recsFetched && this.trackRecommendationMap[trackId]) {
-      return this.trackRecommendationMap[trackId].length > 0;
-    } else {
-      return false;
-    }
-  }
-
   getSavedTracks() {
     // Temp JSON data
-    // this.jsonService.getSavedTracks().subscribe(data => {
-    //   this.savedTracks = data['items'].map(track => (
-    //     {
-    //       artists: track['track']['artists'],
-    //       track: track['track']['name'],
-    //       album: track['track']['album']['name'],
-    //       coverLow: track['track']['album']['images'][2]['url'],
-    //       coverHigh: track['track']['album']['images'][0]['url'],
-    //       id: track['track']['id'],
-    //       release: new Date(track['track']['album']['release_date']),
-    //       addedOn: new Date(track['added_at']),
-    //       albumId: track['track']['album']['id'],
-    //     }
-    //   ));
-    //   this.currentTrack = this.savedTracks[0];
-    //   this.jsonService.getRecs().subscribe(recs => {
+    this.jsonService.getSavedTracks().subscribe(data => {
+      this.savedTracks = data['items'].map(track => (
+        {
+          artists: track['track']['artists'],
+          track: track['track']['name'],
+          album: track['track']['album']['name'],
+          coverLow: track['track']['album']['images'][2]['url'],
+          coverHigh: track['track']['album']['images'][0]['url'],
+          id: track['track']['id'],
+          release: new Date(track['track']['album']['release_date']),
+          addedOn: new Date(track['added_at']),
+          albumId: track['track']['album']['id'],
+        }
+        ));
+      this.currentTrack = this.savedTracks[0];
+      this.jsonService.getRecs().subscribe(recs => {
 
-    //     this.savedTracks.forEach(element => {
-    //       this.trackRecommendationMap[element.id] = recs['tracks'].map(track => (
-    //         {
-    //           artists: track['artists'],
-    //           track: track['name'],
-    //           album: track['album']['name'],
-    //           coverLow: track['album']['images'][2]['url'],
-    //           coverHigh: track['album']['images'][0]['url'],
-    //           release: new Date(track['album']['release_date']),
-    //           seedId: element.id,
-    //           id: track['id']
-    //         }
-    //       ));
-    //     });
-    //   });
-
-    // });
-
-      this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
-        this.savedTracks = savedTracks;
-        this.currentTrack = this.savedTracks[0];
-      },
-        error => {
-          if (error) {
-            this.error = error;
-          }
-        },
-        () => {
-          this.savedTracks.forEach(element => {
-            this.getRecommendations(element.id, [element.artists, element.track]);
+        this.savedTracks.forEach(element => {
+          this.trackRecommendationMap[element.id] = recs['tracks'].map(track => (
+            {
+              artists: track['artists'],
+              track: track['name'],
+              album: track['album']['name'],
+              coverLow: track['album']['images'][2]['url'],
+              coverHigh: track['album']['images'][0]['url'],
+              release: new Date(track['album']['release_date']),
+              seedId: element.id,
+              id: track['id']
+            }
+            ));
           });
-        }
-      );
-    }
+        });
 
-    getRecommendations(id: string, attributes: any[]) {
-      this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
-        this.trackRecommendationMap[id] = recommendedTracks;
-      }, error => {
-        if (error) {
-          this.error = error;
-        }
-      },
-      () => this.recsFetched = true
-    );
+    });
+
+    //   this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
+      //     this.savedTracks = savedTracks;
+    //     this.currentTrack = this.savedTracks[0];
+    //   },
+    //     error => {
+      //       if (error) {
+        //         this.error = error;
+        //       }
+        //     },
+        //     () => {
+          //       this.savedTracks.forEach(element => {
+            //         this.getRecommendations(element.id, [element.artists, element.track]);
+            //       });
+            //     }
+            //   );
+            // }
+
+            // getRecommendations(id: string, attributes: any[]) {
+              //   this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
+                //     this.trackRecommendationMap[id] = recommendedTracks;
+                //   }, error => {
+                  //     if (error) {
+                    //       this.error = error;
+                    //     }
+    //   },
+    //   () => this.recsFetched = true
+    // );
 
   }
 
-
-  addTrack<T extends Track>(track: T, structure: string, i: string, recTrackIndex: string = null) {
-    if (structure === 'saved') {
-      this.currentPlaylist.push(track);
-      this.savedTracks[i]['addedToPlaylist'] = true;
-    } else {
-      this.currentPlaylist.push(track);
-      this.trackRecommendationMap[i][recTrackIndex]['addedToPlaylist'] = true;
-    }
+  OnSelected<T extends Track>(selectedTrack: T) {
+    this.currentTrack = selectedTrack;
   }
 
-  removeTrack<T extends Track>(track: T, index) {
+  OnAdd(playlistTrack) {
+    this.currentPlaylist.push(playlistTrack);
+  }
+
+  OnRemove<T extends Track>(track: T, component?: SavedTrackComponent) {
     for (let i = 0; i < this.currentPlaylist.length; i++) {
-      if (this.currentPlaylist[i].id === track.id) {
+      if (this.currentPlaylist[i].track.id === track.id) {
         this.currentPlaylist.splice(i, 1);
 
-        if (track instanceof RecommendedTrack && track.seedId) {
-          index = this.trackRecommendationMap[track.seedId].findIndex(element => element.id === track.id);
-          this.trackRecommendationMap[track.seedId][index]['addedToPlaylist'] = false;
-        } else {
-          index = this.savedTracks.findIndex(element => element.id === track.id);
-          this.savedTracks[index]['addedToPlaylist'] = false;
+        if (component) {
+          component.setAddedToPlaylist(false);
         }
         break;
       }

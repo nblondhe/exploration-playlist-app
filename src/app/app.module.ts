@@ -1,12 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
-import { LandingComponent } from './landing/landing.component';
-import { PlaylistComponent } from './playlist/playlist.component';
 import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PlaylistModule } from './playlist/playlist.module';
+
+import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
+import { LandingComponent } from './landing/landing.component';
 import { AboutComponent } from './about/about.component';
 
 const appRoutes: Routes = [
@@ -18,13 +19,13 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     LandingComponent,
-    PlaylistComponent,
     HomeComponent,
     AboutComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    PlaylistModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes,
