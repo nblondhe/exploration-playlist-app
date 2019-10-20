@@ -79,3 +79,29 @@ export const notificationAnimations: {
 };
 
 export type NotifAnimationState = 'default' | 'closing';
+
+// Dropdown slide
+export const dropdownAnimation = [
+  trigger('dropdownSlide', [
+      state('in', style({
+          'max-height': '500px',
+          'display': 'flex',
+      })),
+      state('out', style({
+          'max-height': '0px',
+          'display': 'flex'
+      })),
+      transition('in => out', [group([
+          animate('300ms ease-in-out', style({
+              'max-height': '0px'
+          })),
+      ]
+      )]),
+      transition('out => in', [group([
+          animate('300ms ease-in-out', style({
+              'max-height': '500px'
+          })),
+      ]
+      )])
+  ]),
+];

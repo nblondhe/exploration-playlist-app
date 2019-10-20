@@ -58,8 +58,8 @@
         </div>
         <div class="playlist--trackSpacer"></div>
       </div>
+      
 <!-- END CURRENT PLAYLIST WINDOW -->
-
       <div class="flex-wrapper playlist-actions">
         <a class="button button-med outlined" (click)="clearPlaylist();">Clear Playlist</a>
         <a class="button button-med" (click)="createPlaylist();">Create Playlist</a>
@@ -91,8 +91,8 @@
       </div>
     </aside>
   </div>
-<!-- END LEFT SIDE -->
 
+<!-- END LEFT SIDE -->
 <!-- BEGIN RIGHT SIDE -->
 
 <!-- APP HEADER -->
@@ -102,7 +102,7 @@
           <div id="appHeader" class="appHeader">
               <div class="appHeader--links">
                 <div class="links about">
-                  <a class="link" routerLink="/about" routerLinkActive="active">About</a>
+                  <a class="link" routerLink="/about">About</a>
                   <div class="vertical"></div>
                   <a class="link" href="https://github.com/nblondhe/exploration-playlist-app">Github</a>
                 </div>
@@ -120,69 +120,15 @@
 
 <!-- SAVED TRACKS AND RECOMMENDATIONS -->
         <div class="flex-container">
-        
-        
           <div *ngFor="let track of savedTracks; index as i; trackBy: trackById" class="tracks-list">
-            <app-saved-track [savedTrack]="track" 
+            <app-saved-track [track]="track" 
+                    [recommendedTracks]="trackRecommendationMap[track.id]"
                     (current)="OnSelected($event)"
                     (playlistAdd)="OnAdd($event)"
                     (playlistRemove)="OnRemove($event)"
                     >
             </app-saved-track>
-            <!-- <div #collapseAnchor class="track-row collapsible-parent" (click)="currentTrack = savedTracks[i]">
-              <img *ngIf="!track.addedToPlaylist" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
-                (click)="addTrack(track,'saved', i)" />
-              <img *ngIf="track.addedToPlaylist" alt="remove" class="remove-circle clickable"
-                src="../assets/images/remove_circle.svg" (click)="removeTrack(track, i)" />
-              <img class="small-cover clickable" src="{{ track.coverLow }}" />
-              <div class="track-info">
-                <div class="track clickable track-spacing">{{ track.track }}</div>
-                <div class="artist clickable track-spacing">
-                  <span *ngFor="let artist of track.artists; index as j">
-                    {{ artist.name }}
-                    <span *ngIf="track.artists.length > 1 && j !== track.artists.length - 1">
-                      ,&nbsp;
-                    </span>
-                  </span>
-                </div>
-              </div>
-              <div *ngIf="hasRecommendations(track.id)" class="track-actions">
-                <a class="button similar raised-white" style="padding-right: 48px;" (click)="toggleRecommendation($event, i)">
-                  Recommended Tracks
-                </a>
-                <img alt="expand" (click)="toggleRecommendation($event, i)" class="expand lg-screen clickable"
-                  src="../assets/images/expand_more_secondary.svg" />
-                <img alt="expand" (click)="toggleRecommendation($event, i)" class="sm-screen clickable"
-                  src="../assets/images/expand_more.svg" />
-              </div>
-            </div> -->
-        
-            <!-- <div id="panel-{{ i }}" class="collapsed ">
-              <div *ngFor="let rec of trackRecommendationMap[track.id]; index as k; trackBy: trackById"
-                [ngClass]="{'collapsed-bottom-inset': k == 4, 'collapsed-top-inset': k == 0}" class="track-row rec-row"
-                (click)="currentTrack = trackRecommendationMap[track.id][k]">
-                <img *ngIf="!rec.addedToPlaylist" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
-                  (click)="addTrack(rec, 'recommended', track.id, k)" />
-                <img *ngIf="rec.addedToPlaylist" alt="remove" class="remove-circle clickable"
-                  src="../assets/images/remove_circle.svg" (click)="removeTrack(rec, k)" />
-        
-                <img class="small-cover clickable" src="{{ rec.coverLow }}" />
-                <div>
-                  <div class="track clickable track-spacing"> {{ rec.track }}</div>
-                  <div class="artist clickable track-spacing">
-                    <span *ngFor="let artist of rec.artists; index as k">
-                      {{ artist.name }}
-                      <span *ngIf="rec.artists.length > 1 && k !== rec.artists.length - 1">,&nbsp;</span>
-                    </span>
-                  </div>
-                </div>
-                <div class="track-actions">
-                </div>
-              </div>
-            </div> -->
           </div>
-        
-        
         </div>
 
   </div>

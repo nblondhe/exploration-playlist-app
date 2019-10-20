@@ -29,21 +29,20 @@ export class PlaylistComponent implements OnInit {
   private token: string;
   error: string;
   spotifyUser: SpotifyUser;
-  currentPlaylist = [];
+  playlistId: string;
+  activePanelId: string;
   trackIds = [];
   currentTrack = {};
-  playlistId: string;
-  notifications = [];
-  activePanelId: string;
   activePanel = {};
   animationState: NotifAnimationState = 'default';
   @ViewChild('collapseAnchor') collapseAnchor: ElementRef;
   @ViewChild('trackRow') trackRowRef: ElementRef;
   recsFetched: boolean;
 
+  notifications = [];
+  currentPlaylist = [];
   savedTracks: SavedTrack[];
   trackRecommendationMap: {[id: string]: Array<RecommendedTrack>; } = {};
-  recommendations = {};
 
   constructor(private spotifyService: SpotifyService,
     private jsonService: JsonService) { }
@@ -66,69 +65,68 @@ export class PlaylistComponent implements OnInit {
 
   getSavedTracks() {
     // Temp JSON data
-    this.jsonService.getSavedTracks().subscribe(data => {
-      this.savedTracks = data['items'].map(track => (
-        {
-          artists: track['track']['artists'],
-          track: track['track']['name'],
-          album: track['track']['album']['name'],
-          coverLow: track['track']['album']['images'][2]['url'],
-          coverHigh: track['track']['album']['images'][0]['url'],
-          id: track['track']['id'],
-          release: new Date(track['track']['album']['release_date']),
-          addedOn: new Date(track['added_at']),
-          albumId: track['track']['album']['id'],
-        }
-        ));
-      this.currentTrack = this.savedTracks[0];
-      this.jsonService.getRecs().subscribe(recs => {
+    // this.jsonService.getSavedTracks().subscribe(data => {
+    //   this.savedTracks = data['items'].map(track => (
+    //     {
+    //       artists: track['track']['artists'],
+    //       track: track['track']['name'],
+    //       album: track['track']['album']['name'],
+    //       coverLow: track['track']['album']['images'][2]['url'],
+    //       coverHigh: track['track']['album']['images'][0]['url'],
+    //       id: track['track']['id'],
+    //       release: new Date(track['track']['album']['release_date']),
+    //       addedOn: new Date(track['added_at']),
+    //       albumId: track['track']['album']['id'],
+    //     }
+    //     ));
+    //   this.currentTrack = this.savedTracks[0];
+    //   this.jsonService.getRecs().subscribe(recs => {
 
-        this.savedTracks.forEach(element => {
-          this.trackRecommendationMap[element.id] = recs['tracks'].map(track => (
-            {
-              artists: track['artists'],
-              track: track['name'],
-              album: track['album']['name'],
-              coverLow: track['album']['images'][2]['url'],
-              coverHigh: track['album']['images'][0]['url'],
-              release: new Date(track['album']['release_date']),
-              seedId: element.id,
-              id: track['id']
+    //     this.savedTracks.forEach(element => {
+    //       this.trackRecommendationMap[element.id] = recs['tracks'].map(track => (
+    //         {
+    //           artists: track['artists'],
+    //           track: track['name'],
+    //           album: track['album']['name'],
+    //           coverLow: track['album']['images'][2]['url'],
+    //           coverHigh: track['album']['images'][0]['url'],
+    //           release: new Date(track['album']['release_date']),
+    //           seedId: element.id,
+    //           id: track['id']
+    //         }
+    //         ));
+    //       });
+    //     });
+
+    // });
+
+      this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
+          this.savedTracks = savedTracks;
+        this.currentTrack = this.savedTracks[0];
+      },
+        error => {
+            if (error) {
+                this.error = error;
+              }
+            },
+            () => {
+                this.savedTracks.forEach(element => {
+                    this.getRecommendations(element.id, [element.artists, element.track]);
+                  });
+                }
+              );
             }
-            ));
-          });
-        });
 
-    });
-
-    //   this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
-      //     this.savedTracks = savedTracks;
-    //     this.currentTrack = this.savedTracks[0];
-    //   },
-    //     error => {
-      //       if (error) {
-        //         this.error = error;
-        //       }
-        //     },
-        //     () => {
-          //       this.savedTracks.forEach(element => {
-            //         this.getRecommendations(element.id, [element.artists, element.track]);
-            //       });
-            //     }
-            //   );
-            // }
-
-            // getRecommendations(id: string, attributes: any[]) {
-              //   this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
-                //     this.trackRecommendationMap[id] = recommendedTracks;
-                //   }, error => {
-                  //     if (error) {
-                    //       this.error = error;
-                    //     }
-    //   },
-    //   () => this.recsFetched = true
-    // );
-
+            getRecommendations(id: string, attributes: any[]) {
+                this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
+                    this.trackRecommendationMap[id] = recommendedTracks;
+                  }, error => {
+                      if (error) {
+                          this.error = error;
+                        }
+      },
+      () => this.recsFetched = true
+    );
   }
 
   OnSelected<T extends Track>(selectedTrack: T) {
@@ -235,89 +233,19 @@ export class PlaylistComponent implements OnInit {
     }
   }
 
-  toggleRecommendation(event) {
-    // this.route.fragment.subscribe(f => {
-    //   const element = document.querySelector("#" + f)
-    //   if (element) element.scrollIntoView()
-    // })
-    const anchor = event.target.parentNode.parentNode;
-    const clickedPanel = anchor.nextElementSibling;
-
-    if (this.activePanel['element'] &&
-    this.activePanel['element'] === clickedPanel) {
-      if (this.activePanel['opened'] === true) {
-        this.togglePanel(anchor, clickedPanel, 'close');
-      } else {
-        this.togglePanel(anchor, clickedPanel);
-      }
-    } else if (this.activePanel['element']) {
-      this.togglePanel(anchor, this.activePanel['element'], 'close');
-      this.toggleHighlight(this.activePanel['anchor'], 'deselect');
-      this.activePanel = {};
-      this.togglePanel(anchor, clickedPanel);
-    } else {
-      this.togglePanel(anchor, clickedPanel);
-    }
-
-    // clickedPanel.scrollIntoView();
-    // const tracksList = anchor.parentNode;
-    // const allSavedTracks = anchor.parentNode.parentNode.children;
-    // this.muteUnselectedTracks(allSavedTracks, tracksList);
-  }
-
-  togglePanel(collapsedAnchor, panel, action?) {
-    if (action === 'close') {
-      this.toggleHighlight(collapsedAnchor, 'deselect');
-      panel.style.display = 'none';
-      panel.style.maxHeight = null;
-      panel.style.webkitTransition = 'max-height .2s ease-in-out';
-
-      this.activePanel['opened'] = false;
-    } else {
-      this.toggleHighlight(collapsedAnchor);
-      panel.style.display = 'flex';
-      panel.style.maxHeight = panel.scrollHeight + '8' + 'px';
-      panel.style.webkitTransition = 'max-height .2s ease-in-out';
-
-      this.activePanel['element'] = panel;
-      this.activePanel['opened'] = true;
-      this.activePanel['anchor'] = collapsedAnchor;
-    }
-  }
-
-  toggleHighlight(element, action?) {
-    if (action === 'deselect') {
-      element.classList.remove('highlighted');
-    } else {
-      element.classList.add('highlighted');
-    }
-  }
-
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(e) {
-    if (window.pageYOffset > 0) {
-      const element = document.getElementById('appHeader');
-      element.style.background = '#63adf2';
-      element.style.boxShadow = '-13px 12px 24px -20px #000';
-    } else {
-      const element = document.getElementById('appHeader');
-      element.style.background = 'unset';
-      element.style.boxShadow = 'unset';
+    const element = document.getElementById('appHeader');
+    if (element) {
+      if (window.pageYOffset > 0 && element) {
+        element.style.background = '#63adf2';
+        element.style.boxShadow = '-13px 12px 24px -20px #000';
+      } else {
+        element.style.background = 'unset';
+        element.style.boxShadow = 'unset';
+      }
     }
   }
 
-  // muteUnselectedTracks(allSavedChildren, tracksList) {
-  //   for (let i = 0; i < allSavedChildren.length; i++) {
-  //     const current = allSavedChildren[i];
-  //     // Mute not selected
-  //     if (current !== tracksList) {
-  //       if (current.classList.contains('mute')) {
-  //         current.classList.remove('mute');
-  //       } else {
-  //         current.classList.add('mute');
-  //       }
-  //     }
-  //   }
-  // }
 
 }

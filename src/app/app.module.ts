@@ -3,12 +3,14 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PlaylistModule } from './playlist/playlist.module';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LandingComponent } from './landing/landing.component';
 import { AboutComponent } from './about/about.component';
+import { PlaylistComponent } from './playlist/playlist.component';
+import { SavedTrackComponent } from './playlist/saved-track/saved-track.component';
+import { RecommendedTrackComponent } from './playlist/recommended-track/recommended-track.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, data: {animation: 'Home'}},
@@ -20,12 +22,14 @@ const appRoutes: Routes = [
     AppComponent,
     LandingComponent,
     HomeComponent,
-    AboutComponent
+    AboutComponent,
+    PlaylistComponent,
+    SavedTrackComponent,
+    RecommendedTrackComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    PlaylistModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes,
