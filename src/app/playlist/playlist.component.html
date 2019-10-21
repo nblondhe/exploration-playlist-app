@@ -1,6 +1,6 @@
 <div class="container">
 
-<!-- BEGIN LEFT SIDE -->
+<!-- TRACK DETAIL -->
   <div class="column">
     <div class="top-spacing"></div>
     <div class="detail">
@@ -59,13 +59,13 @@
         <div class="playlist--trackSpacer"></div>
       </div>
       
-<!-- END CURRENT PLAYLIST WINDOW -->
       <div class="flex-wrapper playlist-actions">
         <a class="button button-med outlined" (click)="clearPlaylist();">Clear Playlist</a>
         <a class="button button-med" (click)="createPlaylist();">Create Playlist</a>
       </div>
     </div>
 
+<!-- PLAYLIST ACTION -->
     <footer>
       <div class="user">
         <span>
@@ -82,7 +82,7 @@
       </div>
     </footer>
     <aside [@fadeAnimation]="{value: animationState, params:
-          { fadeIn: 350, fadeOut: 350 }}" (@fadeAnimation.done)="onFadeFinished($event)"
+          { fadeIn: 500, fadeOut: 500 }}" (@fadeAnimation.done)="onFadeFinished($event)"
       *ngFor="let notif of notifications" class="notification">
       <div class="notification--message" *ngIf="!notif.dismissed" 
       [ngClass]="{'notifError': notif.style=='error', 'notifSuccess': notif.style=='success'}">
@@ -91,9 +91,6 @@
       </div>
     </aside>
   </div>
-
-<!-- END LEFT SIDE -->
-<!-- BEGIN RIGHT SIDE -->
 
 <!-- APP HEADER -->
   <div class="column-tracks">

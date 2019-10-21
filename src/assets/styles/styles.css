@@ -210,29 +210,19 @@ footer {
 
 
 /*  Shared track styles */
-
-.small-cover {
-    display: flex;
-    border-radius: 5px;
-    min-width: 64px;
-    margin-right: 12px;
-    margin-left: 32px;
-}
-
-.track-spacing {
-    margin-top: 4px;
-}
-
-.track, .artist {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    text-align: left;
-}
-
-.artist {
+.track-row {
+    font-family: 'Lato', sans-serif;
+    color: var(--text);
+    width: 100%;
     font-size: 12px;
-    color: var(--text-muted);
+    display: flex;
+    flex-direction: row;
+    padding: 18px 0px;
+}
+
+.track-row-wrapper {
+    display: flex;
+    flex: 1;
 }
 
 .add {
@@ -249,6 +239,31 @@ footer {
     align-self: center;
     animation: .75s fadeIn;
     animation-fill-mode: forwards;
+}
+
+.small-cover {
+    display: flex;
+    border-radius: 5px;
+    min-width: 64px;
+    margin-right: 12px;
+    margin-left: 32px;
+}
+
+.track-spacing {
+    margin-top: 4px;
+}
+
+
+.track, .artist {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: left;
+}
+
+.artist {
+    font-size: 12px;
+    color: var(--text-muted);
 }
 
 
@@ -275,7 +290,7 @@ footer {
 
 @media only screen and (min-width : 684px) {
 
-    .clickable.sm-screen {
+    .sm-screen {
         display: none;
     }    
 }
@@ -288,7 +303,7 @@ footer {
         display: none;
         visibility: hidden;
     }
-    .clickable.sm-screen {
+    .sm-screen {
         position: relative;
         padding-right: 32px;
     }

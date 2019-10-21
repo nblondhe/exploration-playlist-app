@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { SavedTrackComponent } from '../saved-track/saved-track.component';
 
 @Component({

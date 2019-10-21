@@ -1,23 +1,13 @@
-import { Component, OnInit, ViewChild, HostListener, Directive, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ElementRef } from '@angular/core';
 import { SpotifyService } from '../spotify.service';
-import { JsonService } from '../json.service';
 import { notificationAnimations, NotifAnimationState } from '../animations';
-import { SavedTrack } from '../savedTrack';
-import { SpotifyUser } from '../spotifyUser';
-import { Track } from '../track';
-import { RecommendedTrack } from '../recommendedTrack';
+import { SavedTrack } from '../models/savedTrack';
+import { SpotifyUser } from '../models/spotifyUser';
+import { Track } from '../models/track';
+import { RecommendedTrack } from '../models/recommendedTrack';
+import { Notification } from '../models/notification';
 import { SavedTrackComponent } from './saved-track/saved-track.component';
 
-export class Notification {
-  content: string;
-  style: string;
-  dismissed = false;
-
-  constructor(content, style?) {
-    this.content = content;
-    this.style = style || 'info';
-  }
-}
 
 @Component({
   selector: 'app-playlist',
@@ -30,27 +20,23 @@ export class PlaylistComponent implements OnInit {
   error: string;
   spotifyUser: SpotifyUser;
   playlistId: string;
-  activePanelId: string;
   trackIds = [];
   currentTrack = {};
-  activePanel = {};
   animationState: NotifAnimationState = 'default';
-  @ViewChild('collapseAnchor') collapseAnchor: ElementRef;
-  @ViewChild('trackRow') trackRowRef: ElementRef;
   recsFetched: boolean;
+  @ViewChild('collapseAnchor') collapseAnchor: ElementRef;
 
   notifications = [];
   currentPlaylist = [];
   savedTracks: SavedTrack[];
   trackRecommendationMap: {[id: string]: Array<RecommendedTrack>; } = {};
 
-  constructor(private spotifyService: SpotifyService,
-    private jsonService: JsonService) { }
+  constructor(private spotifyService: SpotifyService) { }
 
     // When making changes to ngFor collection,
     // DOM should only re-render the returned id - not all of collection
     trackById(i, id) {
-      return id;
+      return i;
     }
 
   // TODO Subscribe chain could be refactored to mergemap/switchmap or other RXJS operator
@@ -64,67 +50,31 @@ export class PlaylistComponent implements OnInit {
   }
 
   getSavedTracks() {
-    // Temp JSON data
-    // this.jsonService.getSavedTracks().subscribe(data => {
-    //   this.savedTracks = data['items'].map(track => (
-    //     {
-    //       artists: track['track']['artists'],
-    //       track: track['track']['name'],
-    //       album: track['track']['album']['name'],
-    //       coverLow: track['track']['album']['images'][2]['url'],
-    //       coverHigh: track['track']['album']['images'][0]['url'],
-    //       id: track['track']['id'],
-    //       release: new Date(track['track']['album']['release_date']),
-    //       addedOn: new Date(track['added_at']),
-    //       albumId: track['track']['album']['id'],
-    //     }
-    //     ));
-    //   this.currentTrack = this.savedTracks[0];
-    //   this.jsonService.getRecs().subscribe(recs => {
-
-    //     this.savedTracks.forEach(element => {
-    //       this.trackRecommendationMap[element.id] = recs['tracks'].map(track => (
-    //         {
-    //           artists: track['artists'],
-    //           track: track['name'],
-    //           album: track['album']['name'],
-    //           coverLow: track['album']['images'][2]['url'],
-    //           coverHigh: track['album']['images'][0]['url'],
-    //           release: new Date(track['album']['release_date']),
-    //           seedId: element.id,
-    //           id: track['id']
-    //         }
-    //         ));
-    //       });
-    //     });
-
-    // });
-
-      this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
-          this.savedTracks = savedTracks;
-        this.currentTrack = this.savedTracks[0];
+    this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
+      this.savedTracks = savedTracks;
+      this.currentTrack = this.savedTracks[0];
+    },
+      error => {
+        if (error) {
+          this.error = error;
+        }
       },
-        error => {
-            if (error) {
-                this.error = error;
-              }
-            },
-            () => {
-                this.savedTracks.forEach(element => {
-                    this.getRecommendations(element.id, [element.artists, element.track]);
-                  });
-                }
-              );
-            }
+      () => {
+        this.savedTracks.forEach(track => {
+          this.getRecommendations(track.id, [track.artists, track.track]);
+        });
+      }
+    );
+  }
 
-            getRecommendations(id: string, attributes: any[]) {
-                this.spotifyService.getRecommendations(id, attributes, this.token).subscribe(recommendedTracks => {
-                    this.trackRecommendationMap[id] = recommendedTracks;
-                  }, error => {
-                      if (error) {
-                          this.error = error;
-                        }
-      },
+  getRecommendations(id: string, basedOnAttributes: any[]) {
+    this.spotifyService.getRecommendations(id, basedOnAttributes, this.token).subscribe(recommendedTracks => {
+      this.trackRecommendationMap[id] = recommendedTracks;
+    }, error => {
+      if (error) {
+        this.error = error;
+      }
+    },
       () => this.recsFetched = true
     );
   }
@@ -172,31 +122,32 @@ export class PlaylistComponent implements OnInit {
     const tracks = [];
     const chunkSize = 99;
 
-    Object.entries(this.currentPlaylist).forEach(([key, value]) => {
-      const last = tracks[tracks.length - 1];
-      if (!last || last.length === chunkSize) {
-        tracks.push(['spotify:track:' + value['id']]);
+    for (let i = 0; i < this.currentPlaylist.length; i++) {
+      const trackId = this.currentPlaylist[i]['track']['id'];
+      const lastSegment = tracks[tracks.length - 1];
+      if (!lastSegment || lastSegment.length === chunkSize) {
+        tracks.push(['spotify:track:' + trackId]);
       } else {
-        last.push('spotify:track:' + value['id']);
+        lastSegment.push('spotify:track:' + trackId);
       }
-    });
+    }
 
-      tracks.forEach(segment => {
-        this.spotifyService.buildPlaylist(this.spotifyUser.id, this.playlistId, this.token, segment)
-          .subscribe(
-            results => {
-              if (results) {
-                this.sendNotification('Playlist added!', 'success');
-              }
-            },
-            error => {
-              if (error) {
-                this.sendNotification('Error creating playlist.', 'error');
-                this.error = error;
-              }
+    tracks.forEach(segment => {
+      this.spotifyService.buildPlaylist(this.spotifyUser.id, this.playlistId, this.token, segment)
+        .subscribe(
+          results => {
+            if (results) {
+              this.sendNotification('Playlist added!', 'success');
             }
-          );
-      });
+          },
+          error => {
+            if (error) {
+              this.sendNotification('Error creating playlist.', 'error');
+              this.error = error;
+            }
+          }
+        );
+    });
   }
 
   clearPlaylist() {
@@ -205,16 +156,16 @@ export class PlaylistComponent implements OnInit {
       this.savedTracks[i].addedToPlaylist = false;
     }
 
-    for (const baseTrackKey in this.trackRecommendationMap) {
-      if (this.trackRecommendationMap.hasOwnProperty(baseTrackKey)) {
-        for (let i = 0; i < this.trackRecommendationMap[baseTrackKey].length; i++) {
-          this.trackRecommendationMap[baseTrackKey][i].addedToPlaylist = false;
+    for (const baseTrackId in this.trackRecommendationMap) {
+      if (this.trackRecommendationMap.hasOwnProperty(baseTrackId)) {
+        for (let i = 0; i < this.trackRecommendationMap[baseTrackId].length; i++) {
+          this.trackRecommendationMap[baseTrackId][i].addedToPlaylist = false;
         }
       }
     }
   }
 
-  sendNotification(content, style) {
+  sendNotification(content: string, style: string) {
     const notification = new Notification(content, style);
     this.notifications.push(notification);
   }

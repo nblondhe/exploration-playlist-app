@@ -1,56 +1,38 @@
-<div *ngIf="track" #dropdownAnchor class="track-row collapsible-parent" (click)="setCurrent()">
-  <img *ngIf="!track.addedToPlaylist" alt="add" class="add clickable" src="../assets/images/add_circle.svg"
-    (click)="addTrack()" />
-  <img *ngIf="track.addedToPlaylist" alt="remove" class="remove-circle clickable"
+<div *ngIf="track" #dropdownAnchor class="track-row collapsible-parent">
+  <img *ngIf="!track.addedToPlaylist" alt="Add track to playlist" class="add clickable"
+    src="../assets/images/add_circle.svg" (click)="addTrack()" />
+  <img *ngIf="track.addedToPlaylist" alt="Remove track from playlist" class="remove-circle"
     src="../assets/images/remove_circle.svg" (click)="removeTrack()" />
-  <img class="small-cover clickable" src="{{ track.coverLow }}" />
-  <div class="track-info">
-    <div class="track clickable track-spacing">{{ track.track }}</div>
-    <div class="artist clickable track-spacing">
-      <span *ngFor="let artist of track.artists; index as j">
-        {{ artist.name }}
-        <span *ngIf="track.artists.length > 1 && j !== track.artists.length - 1">
-          ,&nbsp;
+  <div class="clickable track-row-wrapper" (click)="setCurrent()">
+    <img class="small-cover" src="{{ track.coverLow }}" />
+    <div class="track-info">
+      <div class="track track-spacing">{{ track.track }}</div>
+      <div class="artist track-spacing">
+        <span *ngFor="let artist of track.artists; index as j">
+          {{ artist.name }}
+          <span *ngIf="track.artists.length > 1 && j !== track.artists.length - 1">
+            ,&nbsp;
+          </span>
         </span>
-      </span>
+      </div>
     </div>
-  </div>
-  <div *ngIf="recommendationsActive" class="track-actions"
-  [ngStyle]="{'visibility': dropdownState === 'in'? 'visible' : 'hidden'}">
-  <!-- <div *ngIf="recommendationsActive" class="track-actions"> -->
-    <a class="button similar raised-white" style="padding-right: 48px;">
-      Recommended Tracks
-    </a>
-    <img alt="expand" (click)="toggleRecommendations()" class="expand lg-screen clickable"
-    src="../assets/images/expand_more_secondary.svg" />
-    <img alt="expand" (click)="toggleRecommendations()" class="sm-screen clickable"
-    src="../assets/images/expand_more.svg" />
+    <div *ngIf="recommendedTracks && recommendedTracks.length > 0" class="track-actions"
+      (click)="toggleRecommendations()" [ngStyle]="{'visibility': dropdownState === 'in'? 'visible' : 'hidden'}">
+      <a class="button similar raised-white" style="padding-right: 48px;">
+        Recommended Tracks
+      </a>
+      <img [@expansionArrowRotate]='expansionArrowState' alt="expand" class="expand lg-screen"
+        src="../assets/images/expand_more_secondary.svg" />
+      <!-- <img alt="expand" class="sm-screen" src="../assets/images/expand_more.svg" /> -->
+    </div>
   </div>
 </div>
 
-<!-- <div *ngIf="recommendedTracks" #dropdown id="panel-{{ trackRowIndex }}" class="collapsed"
-  [@dropdownSlide]="dropdownState">
-  <div *ngFor="let recommendedTrack of recommendedTracks; index as i;"
-    [ngClass]="{'collapsed-bottom-inset': i == 4, 'collapsed-top-inset': i == 0}" class="track-row rec-row">
-    <app-recommended-track class="track-row rec-row" [recommendedTrack]="recommendedTrack"
-      (current)="OnRecommendationSelected($event)"
-      (playlistAdd)="OnRecommendationAdd($event)"
-      (playlistRemove)="OnRecommendationRemove($event)"
-      >
-    </app-recommended-track>
-  </div>
-</div> -->
-
-<div *ngIf="recommendedTracks" #dropdown class="collapsed"
-  [@dropdownSlide]="dropdownState">
-  <div *ngFor="let recommendedTrack of recommendedTracks; index as i;"
-    [ngClass]="{'collapsed-bottom-inset': i == 4, 'collapsed-top-inset': i == 0}" class="track-row rec-row">
-    <app-recommended-track class="track-row rec-row" [track]="recommendedTrack" 
-    (click)="setCurrent(recommendedTrack)"
-      (current)="OnRecommendationSelected($event)"
-      (playlistAdd)="OnRecommendationAdd($event)"
-      (playlistRemove)="OnRecommendationRemove($event)"
-      >
-    </app-recommended-track>
-  </div>
+<!-- RECOMMENDED TRACK DROPDOWN PANEL -->
+<div *ngIf="recommendedTracks" #dropdown class="collapsed" [@dropdownSlide]="dropdownState">
+  <app-recommended-track *ngFor="let recommendedTrack of recommendedTracks; index as i;"
+    [ngClass]="{'collapsed-bottom-inset': i == 4, 'collapsed-top-inset': i == 0}" class="track-row rec-row"
+    [track]="recommendedTrack" (current)="OnRecommendationSelected($event)" (playlistAdd)="OnRecommendationAdd($event)"
+    (playlistRemove)="OnRecommendationRemove($event)">
+  </app-recommended-track>
 </div>

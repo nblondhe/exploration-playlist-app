@@ -4,9 +4,9 @@ import { throwError, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from './../environments/environment';
 
-import { SavedTrack } from './savedTrack';
-import { RecommendedTrack } from './recommendedTrack';
-import { SpotifyUser } from './spotifyUser';
+import { SavedTrack } from '../app/models/savedTrack';
+import { RecommendedTrack } from '../app/models/recommendedTrack';
+import { SpotifyUser } from './models/spotifyUser';
 
 @Injectable({
   providedIn: 'root'

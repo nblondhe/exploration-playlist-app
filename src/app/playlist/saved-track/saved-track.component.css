@@ -1,40 +1,25 @@
-.track-row.action-header {
-    color: var(--text);
-    border: none;
-    background: var(--tab);
-    padding: 48px 0 24px;
-    flex-wrap: wrap;
-}
-
 /*  TRACK ROW */
-.track-row {
-    width: 100%;
-    margin-right: auto;
+
+div.track-row.collapsible-parent:hover {
+    background: var(--accent);
 }
 
-.track-row:hover > .remove,
-.track-row:hover > .add,
-.track-row:hover > .remove-circle,
-.track-row:hover > .track-actions > .similar,
-.track-row:hover > .track-actions > .expand {
+div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .track-actions > .similar,
+div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .track-actions > .expand,
+div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .add,
+div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .track-actions {
     visibility: visible;
 }
 
-.track-row.collapsible-parent.highlighted > .track-actions > .similar,
-.track-row.collapsible-parent.highlighted > .track-actions > .expand,
-.track-row.collapsible-parent.highlighted > .add {
-    visibility: visible;
-}
-
-.track-row {
-    font-family: 'Lato', sans-serif;
-    color: var(--text);
-    width: 100%;
-    font-size: 12px;
-    display: flex;
-    flex-direction: row;
-    padding: 18px 0px;
-}
+.expand {
+    transform: rotate(0deg);
+    transition: transform 1s linear;
+  }
+  
+.expand.open {
+    transform: rotate(180deg);
+    transition: transform 1s linear;
+  }
 
 .track-info {
     margin-right: 12px;
@@ -45,6 +30,7 @@
     margin-left: auto;
     align-self:center;
     position: relative;
+    visibility: hidden;
 }
 
 .similar {
@@ -60,9 +46,6 @@
     top: 2px;
 }
 
-.expand.sub-track {
-    visibility: hidden;
-}
 
 @keyframes fadeIn {
     0% {

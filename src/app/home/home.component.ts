@@ -9,7 +9,7 @@ import { SpotifyService } from '../spotify.service';
 })
 export class HomeComponent implements OnInit {
   logged_in = false;
-  tokenExpirey = 3600;
+  tokenExpiry = 3600;
 
   constructor(private activatedRoute: ActivatedRoute,
               private spotifyService: SpotifyService) { }
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
     const token = localStorage.getItem('spotifyToken');
     if (token) {
       const tokenDate = new Date(JSON.parse(localStorage.getItem('timestamp')));
-      const expiredDate = tokenDate.setSeconds(tokenDate.getSeconds() + this.tokenExpirey);
+      const expiredDate = tokenDate.setSeconds(tokenDate.getSeconds() + this.tokenExpiry);
       const now = new Date().getTime();
 
       const valid = now < expiredDate;

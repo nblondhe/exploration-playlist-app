@@ -64,7 +64,7 @@ const navRight = [
   ]);
 
 
-// Notifications animation
+// Notifications Fade
 export const notificationAnimations: {
     readonly fadeNotif: AnimationTriggerMetadata;
     } = {
@@ -105,3 +105,22 @@ export const dropdownAnimation = [
       )])
   ]),
 ];
+
+export const expansionArrow =
+  trigger('expansionArrowRotate', [
+    state('default', style({ transform: 'rotate(0)' })),
+    state('rotated', style({ transform: 'rotate(-180deg)' })),
+    transition('rotated => default', animate('200ms ease-out')),
+    transition('default => rotated', animate('200ms ease-in'))
+  ]);
+
+  // export const playlistAction =
+  // trigger('playlistActionFade', [
+  //   state('in', style({opacity: 1})),
+  //   transition(':enter', [
+  //     style({opacity: 0}),
+  //     animate(200 )
+  //   ]),
+  //   transition(':leave',
+  //     animate(200, style({opacity: 0})))
+  // ]);

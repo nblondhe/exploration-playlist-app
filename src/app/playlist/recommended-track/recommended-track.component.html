@@ -2,14 +2,16 @@
   (click)="addTrack()" />
 <img *ngIf="track.addedToPlaylist" alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg"
   (click)="removeTrack()" />
+<div class="clickable track-row-wrapper" (click)="setCurrent()">
 
-<img class="small-cover clickable" src="{{ track.coverLow }}" />
-<div>
-  <div class="track clickable track-spacing"> {{ track.track }}</div>
-  <div class="artist clickable track-spacing">
-    <span *ngFor="let artist of track.artists; index as k">
-      {{ artist.name }}
-      <span *ngIf="track.artists.length > 1 && k !== track.artists.length - 1">,&nbsp;</span>
-    </span>
+  <img class="small-cover clickable" src="{{ track.coverLow }}" />
+  <div>
+    <div class="track clickable track-spacing"> {{ track.track }}</div>
+    <div class="artist clickable track-spacing">
+      <span *ngFor="let artist of track.artists; index as k">
+        {{ artist.name }}
+        <span *ngIf="track.artists.length > 1 && k !== track.artists.length - 1">,&nbsp;</span>
+      </span>
+    </div>
   </div>
 </div>

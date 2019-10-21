@@ -229,15 +229,6 @@ img.remove-circle.clickable {
 }
 /*  END CURRENT PLAYLIST WINDOW*/
 
-
-.track-row.action-header {
-    color: var(--text);
-    border: none;
-    background: var(--tab);
-    padding: 48px 0 24px;
-    flex-wrap: wrap;
-}
-
 #appHeader {
     padding-top: 8px;
     width: 100%;
@@ -261,7 +252,7 @@ img.remove-circle.clickable {
     font-weight: 800;
     border-radius: 12px 12px 0 0;
 
-    padding: 4px 48px 12px 48px;
+    padding: 0 48px 12px 48px;
     /* position: relative; */
 
 }
@@ -287,9 +278,7 @@ img.remove-circle.clickable {
     height: 12px;
 }
 
-.tracks-list:hover {
-    background: var(--accent);
-}
+
 /*  END PLAYLIST HEADERS */
 
 

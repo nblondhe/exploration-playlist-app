@@ -1,30 +1,29 @@
 import { Component, OnInit, Input, EventEmitter, Output, SimpleChanges, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { SavedTrack } from 'src/app/savedTrack';
-import { RecommendedTrack } from 'src/app/recommendedTrack';
-import { dropdownAnimation } from 'src/app/animations';
-import { Track } from 'src/app/track';
+import { dropdownAnimation, expansionArrow } from 'src/app/animations';
+import { RecommendedTrack } from '../../models/recommendedTrack';
+import { Track } from '../../models/track';
 
 @Component({
   selector: 'app-saved-track',
   templateUrl: './saved-track.component.html',
   styleUrls: ['./saved-track.component.css'],
-  animations: [dropdownAnimation]
+  animations: [dropdownAnimation, expansionArrow]
 })
 export class SavedTrackComponent implements OnInit {
 
   @Input() track: Track;
-  @Input() recommendedTracks;
+  @Input() recommendedTracks: Track[];
 
-  @Output() current = new EventEmitter<any>();
-  @Output() playlistAdd = new EventEmitter<any>();
-  @Output() playlistRemove = new EventEmitter<any>();
+  @Output() current = new EventEmitter();
+  @Output() playlistAdd = new EventEmitter();
+  @Output() playlistRemove = new EventEmitter();
 
-  @ViewChild('dropdown') dropdown: ElementRef;
   @ViewChild('dropdownAnchor') dropdownAnchor: ElementRef;
+  @ViewChild('dropdown') dropdown: ElementRef;
 
   dropdownState = 'out';
-  recommendationsActive: boolean;
-
+  expansionArrowState = 'default';
+  recommendationsActive = false;
 
   constructor() { }
 
@@ -36,27 +35,19 @@ export class SavedTrackComponent implements OnInit {
       this.current.emit(recommendedTrack);
       return;
     }
-    console.log('super selected', this.track);
     this.current.emit(this.track);
-    this.toggleRecommendations();
   }
 
   toggleRecommendations() {
     if (this.dropdownState === 'out') {
       this.dropdownState = 'in';
+      this.expansionArrowState = 'rotated';
       this.recommendationsActive = true;
     } else {
       this.dropdownState = 'out';
+      this.expansionArrowState = 'default';
     }
   }
-
-  // toggleHighlight(element, action?) {
-  //   if (action === 'deselect') {
-  //     element.classList.remove('highlighted');
-  //   } else {
-  //     element.classList.add('highlighted');
-  //   }
-  // }
 
   setAddedToPlaylist(state: boolean) {
     this.track.addedToPlaylist = state;
@@ -76,7 +67,7 @@ export class SavedTrackComponent implements OnInit {
     this.track['addedToPlaylist'] = false;
   }
 
-  // Inherited methods can't bubble up nested recommendation events directly
+  // Can't bubble up nested recommendation events directly through SavedTrackComponent to playlist
   private OnRecommendationSelected(selectedTrack: RecommendedTrack) {
     this.setCurrent(selectedTrack);
   }
@@ -85,7 +76,7 @@ export class SavedTrackComponent implements OnInit {
     this.playlistAdd.emit(playlistTrack);
   }
 
-  private OnRecommendationRemove(recommendedTrack) {
+  private OnRecommendationRemove(recommendedTrack: RecommendedTrack) {
     this.playlistRemove.emit(recommendedTrack);
   }
 
