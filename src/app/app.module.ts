@@ -11,9 +11,12 @@ import { AboutComponent } from './about/about.component';
 import { PlaylistComponent } from './playlist/playlist.component';
 import { SavedTrackComponent } from './playlist/saved-track/saved-track.component';
 import { RecommendedTrackComponent } from './playlist/recommended-track/recommended-track.component';
+import { AuthGuard } from './auth/auth.guard';
+import { LandingResolverService } from './landing-resolver.service';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, data: {animation: 'Home'}},
+  { path: '', resolve: {authed: LandingResolverService}, component: HomeComponent, data: {animation: 'Home'}},
+  { path: 'playlist', canActivate: [AuthGuard], component: PlaylistComponent},
   { path: 'about', component: AboutComponent, data: {animation: 'About'} },
 ];
 
@@ -39,7 +42,7 @@ const appRoutes: Routes = [
       }
     )
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

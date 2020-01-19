@@ -7,6 +7,7 @@ import { Track } from '../models/track';
 import { RecommendedTrack } from '../models/recommendedTrack';
 import { Notification } from '../models/notification';
 import { SavedTrackComponent } from './saved-track/saved-track.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -24,14 +25,18 @@ export class PlaylistComponent implements OnInit {
   currentTrack = {};
   animationState: NotifAnimationState = 'default';
   recsFetched: boolean;
-  @ViewChild('collapseAnchor') collapseAnchor: ElementRef;
 
   notifications = [];
   currentPlaylist = [];
   savedTracks: SavedTrack[];
   trackRecommendationMap: {[id: string]: Array<RecommendedTrack>; } = {};
 
-  constructor(private spotifyService: SpotifyService) { }
+  constructor(private spotifyService: SpotifyService,
+              private activatedRoute: ActivatedRoute,
+              private router: Router) {
+                let validToken = false;
+                window.location.hash = '';
+               }
 
     // When making changes to ngFor collection,
     // DOM should only re-render the returned id - not all of collection
@@ -41,16 +46,20 @@ export class PlaylistComponent implements OnInit {
 
   // TODO Subscribe chain could be refactored to mergemap/switchmap or other RXJS operator
   ngOnInit() {
-    this.token = localStorage.getItem('spotifyToken');
-    this.spotifyService.getUser(this.token)
+   this.getData();
+  }
+
+  getData() {
+    // TODO Get Token from service itself
+    this.spotifyService.getUser()
       .subscribe(user => {
         this.spotifyUser = user;
       });
-    this.getSavedTracks();
+      this.getSavedTracks();
   }
 
   getSavedTracks() {
-    this.spotifyService.getSavedTracks(this.token).subscribe(savedTracks => {
+    this.spotifyService.getSavedTracks().subscribe(savedTracks => {
       this.savedTracks = savedTracks;
       this.currentTrack = this.savedTracks[0];
     },
@@ -68,7 +77,7 @@ export class PlaylistComponent implements OnInit {
   }
 
   getRecommendations(id: string, basedOnAttributes: any[]) {
-    this.spotifyService.getRecommendations(id, basedOnAttributes, this.token).subscribe(recommendedTracks => {
+    this.spotifyService.getRecommendations(id, basedOnAttributes).subscribe(recommendedTracks => {
       this.trackRecommendationMap[id] = recommendedTracks;
     }, error => {
       if (error) {
@@ -102,7 +111,7 @@ export class PlaylistComponent implements OnInit {
 
   createPlaylist() {
     if (this.currentPlaylist.length > 0) {
-      this.spotifyService.createPlaylist(this.spotifyUser.id, this.token).subscribe(
+      this.spotifyService.createPlaylist(this.spotifyUser.id).subscribe(
         id => {
           this.playlistId = id;
         },
@@ -133,7 +142,7 @@ export class PlaylistComponent implements OnInit {
     }
 
     tracks.forEach(segment => {
-      this.spotifyService.buildPlaylist(this.spotifyUser.id, this.playlistId, this.token, segment)
+      this.spotifyService.buildPlaylist(this.spotifyUser.id, this.playlistId, segment)
         .subscribe(
           results => {
             if (results) {

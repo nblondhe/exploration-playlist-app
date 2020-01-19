@@ -7,6 +7,8 @@ import { environment } from './../environments/environment';
 import { SavedTrack } from '../app/models/savedTrack';
 import { RecommendedTrack } from '../app/models/recommendedTrack';
 import { SpotifyUser } from './models/spotifyUser';
+import { Router } from '@angular/router';
+import { AuthService } from './auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,15 +16,20 @@ import { SpotifyUser } from './models/spotifyUser';
 export class SpotifyService {
   private authURL = 'https://accounts.spotify.com/authorize';
   private spotifyURL = 'https://api.spotify.com/v1/';
+  private token: string;
+  private tokenExpiry = 3600;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+              private router: Router, 
+              private authService: AuthService) {
+    this.token = localStorage.getItem('spotifyToken');
   }
 
-  public getUser(token): Observable<SpotifyUser> {
+  public getUser(): Observable<SpotifyUser> {
     const endpoint = 'me';
     return this.httpClient
     .get<string>(this.spotifyURL + endpoint, {
-      headers: { Authorization: 'Bearer ' + token }
+      headers: { Authorization: 'Bearer ' + this.token }
     })
     .pipe(
       map(user => new SpotifyUser(
@@ -32,11 +39,11 @@ export class SpotifyService {
       catchError(this.handleError));
   }
 
-  public getSavedTracks(token: string): Observable<SavedTrack[]> {
+  public getSavedTracks(): Observable<SavedTrack[]> {
     const endpoint = 'me/tracks?limit=24';
     return this.httpClient
       .get<SavedTrack[]>(this.spotifyURL + endpoint, {
-        headers: { Authorization: 'Bearer ' + token }
+        headers: { Authorization: 'Bearer ' + this.token }
       })
       .pipe(
         map(tracks => tracks['items'].map(track => new SavedTrack(
@@ -54,11 +61,11 @@ export class SpotifyService {
         catchError(this.handleError));
   }
 
-  public getRecommendations(id, attributes, token): Observable<RecommendedTrack[]> {
+  public getRecommendations(id, attributes): Observable<RecommendedTrack[]> {
     const basedOn = attributes[1] + ' - ' + attributes[0][0]['name'];
     const endpoint = `recommendations?limit=5&market=US&seed_tracks=${id}`;
     return this.httpClient.get<RecommendedTrack[]>(this.spotifyURL + endpoint, {
-      headers: { Authorization: 'Bearer ' + token }
+      headers: { Authorization: 'Bearer ' + this.token }
     })
     .pipe(
       map(tracks => tracks['tracks'].map(track => new RecommendedTrack(
@@ -76,7 +83,7 @@ export class SpotifyService {
       catchError(this.handleError));
   }
 
-  public createPlaylist(id, token): Observable<string> {
+  public createPlaylist(id): Observable<string> {
       const body = {
         name: 'Exploration',
         description: 'Curated by you. exploration-app.netlify.com',
@@ -85,7 +92,7 @@ export class SpotifyService {
       const endpoint = `users/${id}/playlists`;
       return this.httpClient
       .post<string>(this.spotifyURL + endpoint, body, {
-        headers: { Authorization: 'Bearer ' + token }
+        headers: { Authorization: 'Bearer ' + this.token }
       })
       .pipe(
         map(result => result['id']),
@@ -93,14 +100,14 @@ export class SpotifyService {
   }
 
   // OLD API?
-  public buildPlaylist(id, playlistId, token, segment): Observable<string> {
+  public buildPlaylist(id, playlistId, segment): Observable<string> {
     const body = {
       uris: segment
     };
     const endpoint = `users/${id}/playlists/${playlistId}/tracks?`;
     return this.httpClient
       .post<string>(this.spotifyURL + endpoint, body, {
-        headers: { Authorization: 'Bearer ' + token }
+        headers: { Authorization: 'Bearer ' + this.token }
       })
       .pipe(
         map(result => result['snapshot_id']),
@@ -125,38 +132,6 @@ export class SpotifyService {
       }
     }
     return throwError(userMessage);
-  }
-
-  public login() {
-    const clientId = environment.config.SPOTIFY_CLIENT_ID;
-    const redirectUri = environment.config.redirect_uri;
-    const scopes = environment.config.scopes;
-
-    // tslint:disable-next-line:max-line-length
-    window.location.href = `${this.authURL}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
-  }
-
-  public setToken(tokenFragment) {
-    // Remove previous token
-    localStorage.removeItem('spotifyToken');
-    localStorage.removeItem('timestamp');
-
-    const hash = tokenFragment
-      .substring()
-      .split('&')
-      .reduce(function (initial, item) {
-        if (item) {
-          const parts = item.split('=');
-          initial[parts[0]] = decodeURIComponent(parts[1]);
-        }
-        return initial;
-      }, {});
-
-    window.location.hash = '';
-
-    localStorage.setItem('spotifyToken', hash['access_token']);
-    localStorage.setItem('timestamp', JSON.stringify(new Date().getTime()));
-    return true;
   }
 
 }

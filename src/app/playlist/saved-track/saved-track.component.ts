@@ -18,8 +18,8 @@ export class SavedTrackComponent implements OnInit {
   @Output() playlistAdd = new EventEmitter();
   @Output() playlistRemove = new EventEmitter();
 
-  @ViewChild('dropdownAnchor') dropdownAnchor: ElementRef;
-  @ViewChild('dropdown') dropdown: ElementRef;
+  @ViewChild('dropdownAnchor', { static: false }) dropdownAnchor: ElementRef;
+  @ViewChild('dropdown', { static: false }) dropdown: ElementRef;
 
   dropdownState = 'out';
   expansionArrowState = 'default';

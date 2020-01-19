@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from '../spotify.service';
+import { AuthService } from '../auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css']
 })
-export class LandingComponent implements OnInit {
+export class LandingComponent {
 
-  constructor(private spotifyService: SpotifyService) { }
-
-  ngOnInit() {
-  }
+  constructor(private authService: AuthService) { }
 
   signIn() {
-    this.spotifyService.login();
+    this.authService.getSpotifyToken();
   }
 }
