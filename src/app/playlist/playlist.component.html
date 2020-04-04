@@ -2,37 +2,56 @@
 
 <!-- TRACK DETAIL -->
   <div class="column">
-    <div class="top-spacing"></div>
     <div class="detail">
-      <div *ngIf="currentTrack" class="flex-wrapper detail--album">
+      <figure *ngIf="currentTrack" class="flex-wrapper detail--album">
         <img class="detail--album--cover" src="{{ currentTrack.coverHigh }}" />
-        <div class="detail--currentTrack">
-          {{currentTrack.track}}
-        </div>
-        <div>
-          <div *ngFor="let artist of currentTrack.artists; index as i">
-            {{ artist["name"] }}
+        <figcaption>
+          <div class="detail--currentTrack">
+            {{currentTrack.track}}
+            <div class=" detail--currentArtist" *ngFor="let artist of currentTrack.artists; index as i">
+              {{ artist["name"] }}
+            </div>
+          </div>
+          <div>
+            <div class="flex-wrapper detail--album--recommended"
+            [ngStyle]="{'visibility': currentTrack.basedOn ? 'visible' : 'hidden'}">
+            <span class="attribute detail--table-seeded">Similar to</span>
+            <span class="value detail--table-seeded">{{currentTrack.basedOn}}</span>
+          </div>
+            <div class="flex-wrapper detail--table">
+              <ul class="detail--list">
+              <li class="detail--list__item">
+                <span class="attribute">Album</span>
+                <span class="value">{{ currentTrack.album }}</span>
+              </li>
+              <li class="detail--list__item">
+                <span class="attribute">Released</span>
+                <span class="value">{{currentTrack.release | date : 'longDate'}}</span>
+              </li>
+              <li class="detail--list__item" [ngStyle]="{'visibility': currentTrack.addedOn ? 'visible' : 'hidden'}">
+                <span class="attribute">Added on</span>
+                <span class="value">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</span>
+              </li>
+            </ul>
+            <ul class="detail--list">
+              <li class="detail--list__item">
+                <span class="attribute">Album</span>
+                <span class="value">{{ currentTrack.album }}</span>
+              </li>
+              <li class="detail--list__item">
+                <span class="attribute">Released</span>
+                <span class="value">{{currentTrack.release | date : 'longDate'}}</span>
+              </li>
+              <li class="detail--list__item" [ngStyle]="{'visibility': currentTrack.addedOn ? 'visible' : 'hidden'}">
+                <span class="attribute">Genre</span>
+                <span class="value">{{currentTrack.genre}}</span>
+              </li>
+            </ul>
           </div>
         </div>
-          <table>
-            <tr>
-              <td class="attribute">Album</td>
-              <td class="value">{{ currentTrack.album }}</td>
-            </tr>
-            <tr>
-              <td class="attribute">Released</td>
-              <td class="value">{{currentTrack.release | date : 'longDate'}}</td>
-            </tr>
-            <tr *ngIf="currentTrack.addedOn">
-              <td class="attribute">Added on</td>
-              <td class="value">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</td>
-            </tr>
-            <tr *ngIf="currentTrack.basedOn">
-              <td class="attribute">Similar to</td>
-              <td class="value">{{currentTrack.basedOn}}</td>
-            </tr>
-          </table>
-      </div>
+
+        </figcaption>
+      </figure>
 
 <!-- CURRENT PLAYLIST WINDOW -->
       <div class="playlist flex-container">
@@ -42,16 +61,19 @@
         </div>
         <div *ngFor="let playlistTrack of currentPlaylist; index as i" class="playlist--track">
           <div class="track-row" (click)="currentTrack = currentPlaylist[i].track">
-            <img alt="remove" class="remove-circle clickable" src="../assets/images/remove_circle.svg"
-              (click)="OnRemove(playlistTrack.track, playlistTrack.component)" />
+              <div alt="Remove track from playlist" class='remove-circle clickable' (click)="OnRemove(playlistTrack.track, playlistTrack.component)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/>
+                  <path style="fill: #FFF;" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>
+              </div>
       
             <div class="playlist--track--detail">
               <div class="track clickable ">{{ playlistTrack.track.track }}</div>
               <div class="artist clickable" *ngFor="let artist of playlistTrack.track.artists; index as j">
-                {{ artist.name }}
-                <span *ngIf="
-                        playlistTrack.track.artists.length > 1 && j !== playlistTrack.track.artists.length - 1
-                        ">,&nbsp;</span>
+                <span *ngIf="j < 1">
+                  {{ artist.name }}
+                  <!-- <span *ngIf="playlistTrack.track.artists.length > 1 && 
+                              (j !== 2 && j !== playlistTrack.track.artists.length - 1)">,&nbsp;</span> -->
+                </span>
               </div>
             </div>
           </div>
@@ -63,7 +85,16 @@
         <a class="button button-med outlined" (click)="clearPlaylist();">Clear Playlist</a>
         <a class="button button-med" (click)="createPlaylist();">Create Playlist</a>
       </div>
-    </div>
+      <aside [@fadeAnimation]="{value: animationState, params:
+            { fadeIn: 500, fadeOut: 500 }}" (@fadeAnimation.done)="onFadeFinished($event)"
+        *ngFor="let notif of notifications" class="notification">
+        <div class="notification--message" *ngIf="!notif.dismissed" 
+        [ngClass]="{'notifError': notif.style=='error', 'notifSuccess': notif.style=='success'}">
+          <div class="notification--message--content">{{notif.content}}</div>
+          <button class="button button-med outlined dismiss" (click)="closeNotification(notif)">Close</button>
+        </div>
+      </aside>
+  </div>
 
 <!-- PLAYLIST ACTION -->
     <footer>
@@ -81,22 +112,13 @@
         </span>
       </div>
     </footer>
-    <aside [@fadeAnimation]="{value: animationState, params:
-          { fadeIn: 500, fadeOut: 500 }}" (@fadeAnimation.done)="onFadeFinished($event)"
-      *ngFor="let notif of notifications" class="notification">
-      <div class="notification--message" *ngIf="!notif.dismissed" 
-      [ngClass]="{'notifError': notif.style=='error', 'notifSuccess': notif.style=='success'}">
-        <div class="notification--message--content">{{notif.content}}</div>
-        <button class="button button-med outlined dismiss" (click)="closeNotification(notif)">Close</button>
-      </div>
-    </aside>
   </div>
-
+  
 <!-- APP HEADER -->
   <div class="column-tracks">
     <div *ngIf="savedTracks" class="tracks-wrapper">
 
-          <div id="appHeader" class="appHeader">
+          <!-- <div id="appHeader" class="appHeader">
               <div class="appHeader--links">
                 <div class="links about">
                   <a class="link" routerLink="/about">About</a>
@@ -113,8 +135,21 @@
                   Saved Tracks and Recommendations
                 </span>
               </div>
+            </div> -->
+        <div id="appHeader" class="appHeader">
+          <div class="appHeader--title--text">
+            <div>
+              Exploration
             </div>
-
+            <div class="appHeader--links">
+              <div class="links about">
+                <a class="link" routerLink="/about">About</a>
+                <div class="vertical"></div>
+                <a class="link" href="https://github.com/nblondhe/exploration-playlist-app">Github</a>
+              </div>
+            </div>
+          </div>
+        </div>
 <!-- SAVED TRACKS AND RECOMMENDATIONS -->
         <div class="flex-container">
           <div *ngFor="let track of savedTracks; index as i; trackBy: trackById" class="tracks-list">

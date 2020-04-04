@@ -38,11 +38,11 @@ export class PlaylistComponent implements OnInit {
                 window.location.hash = '';
                }
 
-    // When making changes to ngFor collection,
-    // DOM should only re-render the returned id - not all of collection
-    trackById(i, id) {
-      return i;
-    }
+  // When making changes to ngFor collection,
+  // DOM should only re-render the returned id - not all of collection
+  trackById(i, id) {
+    return i;
+  }
 
   // TODO Subscribe chain could be refactored to mergemap/switchmap or other RXJS operator
   ngOnInit() {
@@ -87,6 +87,12 @@ export class PlaylistComponent implements OnInit {
       () => this.recsFetched = true
     );
   }
+
+  // getMaxArtists(artists) {
+  //   let limitArtists = artists.filter((item, index) => index > 2 );
+  //   console.log(limitArtists);
+  //   return limitArtists;
+  // }
 
   OnSelected<T extends Track>(selectedTrack: T) {
     this.currentTrack = selectedTrack;
@@ -198,8 +204,9 @@ export class PlaylistComponent implements OnInit {
     const element = document.getElementById('appHeader');
     if (element) {
       if (window.pageYOffset > 0 && element) {
-        element.style.background = '#63adf2';
-        element.style.boxShadow = '-13px 12px 24px -20px #000';
+        element.style.background = '#75B3E7';
+        element.style.boxShadow = '5px 6px 17px -15px #000';
+        // 0px 5px 20px -15px
       } else {
         element.style.background = 'unset';
         element.style.boxShadow = 'unset';

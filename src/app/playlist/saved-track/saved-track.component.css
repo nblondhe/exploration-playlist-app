@@ -1,7 +1,7 @@
 /*  TRACK ROW */
 
 div.track-row.collapsible-parent:hover {
-    background: var(--accent);
+    background: var(--tertiary);
 }
 
 div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .track-actions > .similar,
@@ -24,6 +24,11 @@ div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .tra
 .track-info {
     margin-right: 12px;
     max-width: 164px;
+    max-height: 64px;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .track-actions {
@@ -84,7 +89,7 @@ div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .tra
 }
 
 .rec-row:hover {
-    background: var(--accent);
+    background: var(--tertiary);
 }
 
 .mute {
@@ -92,11 +97,11 @@ div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .tra
 }
 
 .highlighted {
-    background: var(--accent);
+    background: var(--tertiary);
 }
 
 .rec-highlighted {
-    background: var(--accent);
+    background: var(--tertiary);
 }
 
 .rec-sub-header {

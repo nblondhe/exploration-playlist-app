@@ -43,7 +43,7 @@ const navRight = [
       })
     ], optional),
     query(':enter', [
-      style({ right: '-100%',  })
+      style({ left: '-100%',  })
     ]),
     group([
       query(':leave', [
@@ -57,10 +57,8 @@ const navRight = [
 
   export const slider =
   trigger('routeAnimations', [
-    transition('* => Home', navLeft ),
-    transition('* => About', navRight ),
-    transition('About => *', navLeft ),
-    transition('Home => *', navRight )
+    transition('About => Home', navLeft ),
+    transition('Home => About', navRight ),
   ]);
 
 
@@ -92,13 +90,13 @@ export const dropdownAnimation = [
           'display': 'flex'
       })),
       transition('in => out', [group([
-          animate('300ms ease-in-out', style({
+          animate('200ms ease-in-out', style({
               'max-height': '0px'
           })),
       ]
       )]),
       transition('out => in', [group([
-          animate('300ms ease-in-out', style({
+          animate('100ms ease-in-out', style({
               'max-height': '500px'
           })),
       ]

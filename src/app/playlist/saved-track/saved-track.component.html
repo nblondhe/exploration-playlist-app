@@ -1,31 +1,36 @@
 <div *ngIf="track" #dropdownAnchor class="track-row collapsible-parent">
-  <img *ngIf="!track.addedToPlaylist" alt="Add track to playlist" class="add clickable"
-    src="../assets/images/add_circle.svg" (click)="addTrack()" />
-  <img *ngIf="track.addedToPlaylist" alt="Remove track from playlist" class="remove-circle"
-    src="../assets/images/remove_circle.svg" (click)="removeTrack()" />
+    <div *ngIf="!track.addedToPlaylist" alt="Add track to playlist" class='add clickable' (click)="addTrack()" >
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+    </div>
+    <div *ngIf="track.addedToPlaylist" alt="Remove track from playlist" class='remove-circle clickable' (click)="removeTrack()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/>
+        <path style="fill: #FFF;" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>
+    </div>
+
   <div class="clickable track-row-wrapper" (click)="setCurrent()">
     <img class="small-cover" src="{{ track.coverLow }}" />
     <div class="track-info">
       <div class="track track-spacing">{{ track.track }}</div>
       <div class="artist track-spacing">
         <span *ngFor="let artist of track.artists; index as j">
-          {{ artist.name }}
-          <span *ngIf="track.artists.length > 1 && j !== track.artists.length - 1">
-            ,&nbsp;
+          <span *ngIf="j < 3">
+            {{ artist.name }}
+            <span *ngIf="track.artists.length > 1 && 
+              (j !== 2 && j !== track.artists.length - 1)">
+              ,&nbsp;
+            </span>
           </span>
         </span>
       </div>
     </div>
     <div *ngIf="recommendedTracks && recommendedTracks.length > 0" class="track-actions"
       (click)="toggleRecommendations()" [ngStyle]="{'visibility': dropdownState === 'in'? 'visible' : 'hidden'}">
-      <a class="button similar raised-white" style="padding-right: 48px;">
+      <a class="button button-med similar raised-accent" style="padding-right: 48px;">
         Recommended Tracks
       </a>
-      <!-- <img [@expansionArrowRotate]='expansionArrowState' alt="expand" class="expand lg-screen"
-        src="../assets/images/expand_more_secondary.svg" /> -->
         <img alt="expand" class="expand lg-screen"
         src="../assets/images/expand_more_secondary.svg" />
-      <!-- <img alt="expand" class="sm-screen" src="../assets/images/expand_more.svg" /> -->
     </div>
   </div>
 </div>

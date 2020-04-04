@@ -8,3 +8,7 @@
 .actions.landing {
     width: unset;
 }
+
+.flex-wrapper > a {
+    margin-bottom: 1rem;
+}
