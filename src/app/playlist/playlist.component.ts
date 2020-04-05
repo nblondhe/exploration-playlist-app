@@ -88,12 +88,6 @@ export class PlaylistComponent implements OnInit {
     );
   }
 
-  // getMaxArtists(artists) {
-  //   let limitArtists = artists.filter((item, index) => index > 2 );
-  //   console.log(limitArtists);
-  //   return limitArtists;
-  // }
-
   OnSelected<T extends Track>(selectedTrack: T) {
     this.currentTrack = selectedTrack;
   }

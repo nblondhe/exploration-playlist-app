@@ -11,26 +11,18 @@
   <div class="clickable track-row-wrapper" (click)="setCurrent()">
     <img class="small-cover" src="{{ track.coverLow }}" />
     <div class="track-info">
-      <div class="track track-spacing">{{ track.track }}</div>
+      <div class="track track-spacing">
+        {{ track.track }}
+      </div>
       <div class="artist track-spacing">
-        <span *ngFor="let artist of track.artists; index as j">
-          <span *ngIf="j < 3">
-            {{ artist.name }}
-            <span *ngIf="track.artists.length > 1 && 
-              (j !== 2 && j !== track.artists.length - 1)">
-              ,&nbsp;
-            </span>
-          </span>
-        </span>
+        {{ track.artists | limitArtists : 3 }}
       </div>
     </div>
-    <div *ngIf="recommendedTracks && recommendedTracks.length > 0" class="track-actions"
-      (click)="toggleRecommendations()" [ngStyle]="{'visibility': dropdownState === 'in'? 'visible' : 'hidden'}">
-      <a class="button button-med similar raised-accent" style="padding-right: 48px;">
-        Recommended Tracks
-      </a>
-        <img alt="expand" class="expand lg-screen"
-        src="../assets/images/expand_more_secondary.svg" />
+    <div alt="Expand collapsible recommendations"
+    *ngIf="recommendedTracks && recommendedTracks.length > 0" class="track-actions expand"
+      (click)="toggleRecommendations()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path 
+        d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
     </div>
   </div>
 </div>

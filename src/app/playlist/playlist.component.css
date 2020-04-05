@@ -20,10 +20,14 @@
     font-weight: 800;
     font-style: italic;
     text-align: center;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .detail--currentArtist {
-    /* padding: 12px 48px 4px; */
+    padding-top: .25rem;
     font-size: 1rem;
     font-weight: 100;
     text-align: center;
@@ -138,6 +142,16 @@ figcaption {
     border-radius: 10px;
 }
 
+.detail--album--recommended > .value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detail--album--recommended > .attribute {
+    min-width: 4.25rem;
+}
+
 .user {
     position: relative;
     margin-bottom: 20px;
@@ -163,6 +177,7 @@ figcaption {
 
 /*  PLAYLIST HEADERS */
 .tracks-wrapper {
+    min-width: 525px;
     justify-content: flex-start;
     align-self: center;
     width: 85%;
@@ -307,7 +322,6 @@ div.remove-circle.clickable {
 .links.about {
     justify-content: flex-end; 
     flex: 1; 
-    margin-right: 48px;
 }
 
 .links.about > a {

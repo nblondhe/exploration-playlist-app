@@ -8,15 +8,15 @@
         <figcaption>
           <div class="detail--currentTrack">
             {{currentTrack.track}}
-            <div class=" detail--currentArtist" *ngFor="let artist of currentTrack.artists; index as i">
-              {{ artist["name"] }}
+            <div *ngIf="currentTrack.artists" class="detail--currentArtist">
+              {{ currentTrack.artists | limitArtists : 1 }}
             </div>
           </div>
           <div>
             <div class="flex-wrapper detail--album--recommended"
             [ngStyle]="{'visibility': currentTrack.basedOn ? 'visible' : 'hidden'}">
-            <span class="attribute detail--table-seeded">Similar to</span>
-            <span class="value detail--table-seeded">{{currentTrack.basedOn}}</span>
+            <span class="attribute">Similar to</span>
+            <span class="value ">{{currentTrack.basedOn}}</span>
           </div>
             <div class="flex-wrapper detail--table">
               <ul class="detail--list">
@@ -29,22 +29,22 @@
                 <span class="value">{{currentTrack.release | date : 'longDate'}}</span>
               </li>
               <li class="detail--list__item" [ngStyle]="{'visibility': currentTrack.addedOn ? 'visible' : 'hidden'}">
-                <span class="attribute">Added on</span>
-                <span class="value">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</span>
+                <span class="attribute">Genre</span>
+                <span class="value">{{currentTrack.genre}}</span>
               </li>
             </ul>
             <ul class="detail--list">
-              <li class="detail--list__item">
-                <span class="attribute">Album</span>
-                <span class="value">{{ currentTrack.album }}</span>
+              <li class="detail--list__item" [ngStyle]="{'visibility': currentTrack.addedOn ? 'visible' : 'hidden'}">
+                <span class="attribute">Added on</span>
+                <span class="value">{{currentTrack.addedOn | date : 'MMMM, yyyy'}}</span>
               </li>
-              <li class="detail--list__item">
+              <li class="detail--list__item" [ngStyle]="{'visibility': currentTrack.hasOtherProp ? 'visible' : 'hidden'}">
                 <span class="attribute">Released</span>
                 <span class="value">{{currentTrack.release | date : 'longDate'}}</span>
               </li>
-              <li class="detail--list__item" [ngStyle]="{'visibility': currentTrack.addedOn ? 'visible' : 'hidden'}">
-                <span class="attribute">Genre</span>
-                <span class="value">{{currentTrack.genre}}</span>
+              <li class="detail--list__item" [ngStyle]="{'visibility': currentTrack.hasOtherProp ? 'visible' : 'hidden'}">
+                <span class="attribute">Album</span>
+                <span class="value">{{ currentTrack.album }}</span>
               </li>
             </ul>
           </div>
@@ -68,12 +68,8 @@
       
             <div class="playlist--track--detail">
               <div class="track clickable ">{{ playlistTrack.track.track }}</div>
-              <div class="artist clickable" *ngFor="let artist of playlistTrack.track.artists; index as j">
-                <span *ngIf="j < 1">
-                  {{ artist.name }}
-                  <!-- <span *ngIf="playlistTrack.track.artists.length > 1 && 
-                              (j !== 2 && j !== playlistTrack.track.artists.length - 1)">,&nbsp;</span> -->
-                </span>
+              <div class="artist clickable">
+                  {{ playlistTrack.track.artists | limitArtists : 3 }}
               </div>
             </div>
           </div>
@@ -117,25 +113,6 @@
 <!-- APP HEADER -->
   <div class="column-tracks">
     <div *ngIf="savedTracks" class="tracks-wrapper">
-
-          <!-- <div id="appHeader" class="appHeader">
-              <div class="appHeader--links">
-                <div class="links about">
-                  <a class="link" routerLink="/about">About</a>
-                  <div class="vertical"></div>
-                  <a class="link" href="https://github.com/nblondhe/exploration-playlist-app">Github</a>
-                </div>
-              </div>
-              
-              <div class="appHeader--title">
-                <span class="appHeader--title--text">
-                  Exploration
-                </span>
-                <span class="appHeader--title--sub">
-                  Saved Tracks and Recommendations
-                </span>
-              </div>
-            </div> -->
         <div id="appHeader" class="appHeader">
           <div class="appHeader--title--text">
             <div>

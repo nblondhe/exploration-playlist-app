@@ -13,6 +13,7 @@ import { SavedTrackComponent } from './playlist/saved-track/saved-track.componen
 import { RecommendedTrackComponent } from './playlist/recommended-track/recommended-track.component';
 import { AuthGuard } from './auth/auth.guard';
 import { LandingResolverService } from './landing-resolver.service';
+import { LimitArtistsPipe } from './limit-artists.pipe';
 
 const appRoutes: Routes = [
   { path: '', resolve: {authed: LandingResolverService}, component: HomeComponent, data: {animation: 'Home'}},
@@ -28,7 +29,8 @@ const appRoutes: Routes = [
     AboutComponent,
     PlaylistComponent,
     SavedTrackComponent,
-    RecommendedTrackComponent
+    RecommendedTrackComponent,
+    LimitArtistsPipe
   ],
   imports: [
     BrowserModule,

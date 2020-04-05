@@ -4,38 +4,18 @@ div.track-row.collapsible-parent:hover {
     background: var(--tertiary);
 }
 
-div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .track-actions > .similar,
-div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .track-actions > .expand,
 div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .add,
 div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .track-actions {
     visibility: visible;
 }
 
-.expand {
-    transform: rotate(0deg);
-    transition: transform 1s linear;
-  }
-  
-.expand.open {
-    transform: rotate(180deg);
-    transition: transform 1s linear;
-  }
 
 .track-info {
-    margin-right: 12px;
-    max-width: 164px;
     max-height: 64px;
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
-}
-
-.track-actions {
-    margin-left: auto;
-    align-self:center;
-    position: relative;
-    visibility: hidden;
 }
 
 .similar {
@@ -44,12 +24,27 @@ div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .tra
     margin-right: 32px;
 }
 
-.expand {
-    position: absolute;
-    /* visibility: hidden; */
-    left: 165px;
-    top: 2px;
+
+.track-actions {
+    align-self:center;
+    padding: 1rem;
+    visibility: hidden;
 }
+
+.spacer {
+    flex-grow: 1;
+}
+
+/* 
+.expand {
+    transform: rotate(0deg);
+    transition: transform 1s linear;
+  }
+  
+.expand.open {
+    transform: rotate(180deg);
+    transition: transform 1s linear;
+  } */
 
 
 @keyframes fadeIn {

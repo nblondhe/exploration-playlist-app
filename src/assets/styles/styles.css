@@ -1,5 +1,5 @@
 :root {
-    --accent: rgb(253, 193, 109);
+    --accent: #fdc16d;
     --accent-light: rgb(248, 207, 149);
     --secondary: #1B2431;
     --secondary-button: #fff;
@@ -190,13 +190,15 @@ a, a:visited, a:hover {
 .title {
     max-width: 100%;
     margin: 0 12px;
+    margin-bottom: 3rem;
 }
 
 
 .title--text {
     font-weight: 800;
     font-size: 90px;
-    margin: 0 0 64px 0;
+    margin: 0 0 1rem 0;
+    text-align: center;
 }
 
 .vertical {
@@ -229,6 +231,8 @@ footer {
 .track-row-wrapper {
     display: flex;
     flex: 1;
+    min-width: 0;
+    max-height: 64px;
 }
 
 .add {
@@ -262,7 +266,7 @@ footer {
 }
 
 .track.track-spacing {
-    /* white-space: nowrap; */
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -279,6 +283,17 @@ footer {
     font-size: 1.1em;
     font-weight: 100;
     color: var(--text);
+}
+
+.artist.track-spacing {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+div.track-actions > svg {
+    width: 2rem;
+    height: 2rem;
 }
 
 

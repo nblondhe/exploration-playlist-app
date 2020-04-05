@@ -7,8 +7,26 @@
 
 .actions.landing {
     width: unset;
+    justify-content: flex-end;
 }
 
 .flex-wrapper > a {
     margin-bottom: 1rem;
+}
+
+.mission {
+    font-size: 1.1rem;
+    color: var(--text);
+    text-align: center;
+    font-weight: 100;
+    width: 75%;
+    margin: auto;
+}
+
+header.title {
+margin-bottom: 9rem;
+}
+
+nav {
+    margin-bottom: 3rem;
 }
