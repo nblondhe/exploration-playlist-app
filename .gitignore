@@ -35,9 +35,12 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
-environment.ts
-environment.prod.ts
 
+.editorconfig
 # System Files
 .DS_Store
 Thumbs.db
+
+# Deploy
+/functions
+.netlify

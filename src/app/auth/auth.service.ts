@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
-import { tap, delay } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+export interface Settings {
+  SPOTIFY_CLIENT_ID: string,
+  SPOTIFY_SCOPES: string,
+  REDIRECT_URI: string
+};
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +16,13 @@ export class AuthService {
   token: string;
   private tokenExpiry = 3600;
 
+  constructor(private http: HttpClient) {}
+
    getSpotifyToken() {
-    const clientId = environment.config.SPOTIFY_CLIENT_ID;
-    const redirectUri = environment.config.redirect_uri;
-    const scopes = environment.config.scopes;
-
-    // tslint:disable-next-line:max-line-length
-    window.location.href = `${this.authURL}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('%20')}&response_type=token`;
-
+    this.http.get('/.netlify/functions/getSettings')
+      .subscribe((settings: Settings)  => {
+        window.location.href = `${this.authURL}?client_id=${settings.SPOTIFY_CLIENT_ID}&redirect_uri=${settings.REDIRECT_URI}&scope=${settings.SPOTIFY_SCOPES}&response_type=token`;
+      });
   }
 
   setToken(tokenFragment) {

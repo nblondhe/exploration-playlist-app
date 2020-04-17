@@ -1,0 +1,4 @@
+[build]
+  publish = "dist/likeFilter"
+  command = "npm run netlify-build"
+  functions = "functions/"

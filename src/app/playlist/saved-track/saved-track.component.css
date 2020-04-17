@@ -27,7 +27,7 @@ div.track-row.collapsible-parent:hover  > div.clickable.track-row-wrapper > .tra
 
 .track-actions {
     align-self:center;
-    padding: 1rem;
+    padding: 1rem 3rem 1rem 1rem;
     visibility: hidden;
 }
 

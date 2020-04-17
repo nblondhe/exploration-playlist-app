@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { SpotifyService } from '../spotify.service';
+import { Component} from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing',

@@ -2,26 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { environment } from './../environments/environment';
 
 import { SavedTrack } from '../app/models/savedTrack';
 import { RecommendedTrack } from '../app/models/recommendedTrack';
 import { SpotifyUser } from './models/spotifyUser';
-import { Router } from '@angular/router';
-import { AuthService } from './auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyService {
-  private authURL = 'https://accounts.spotify.com/authorize';
   private spotifyURL = 'https://api.spotify.com/v1/';
   private token: string;
-  private tokenExpiry = 3600;
 
-  constructor(private httpClient: HttpClient,
-              private router: Router, 
-              private authService: AuthService) {
+  constructor(private httpClient: HttpClient) {
     this.token = localStorage.getItem('spotifyToken');
   }
 
