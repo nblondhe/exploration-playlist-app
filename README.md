@@ -2,7 +2,7 @@
 Build Spotify playlists from saved tracks and recommendations
 ###### Hosted at [Netlify](http://exploration-app.netlify.com/ "Netlify")  
 
-###### [exploration-app.netlify.com] (http://exploration-app.netlify.com/ "exploration-app.netlify.com")  
+###### http://exploration-app.netlify.com/
 
 This application was created as a sandbox for work in Angular and UI implementation. It requires a Spotify login for use, and has access to the below scopes:  
   
