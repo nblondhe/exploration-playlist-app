@@ -46,9 +46,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: false,
-        anchorScrolling: 'enabled',
-        onSameUrlNavigation: 'reload'
-      }
+    anchorScrolling: 'enabled',
+    onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' }
     )
   ],
   providers: [
